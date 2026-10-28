@@ -1,0 +1,98 @@
+---
+import type { Project } from '../data/site';
+
+interface Props {
+  project: Project;
+}
+
+const { project } = Astro.props;
+---
+
+<article class="card">
+  <h3>{project.title}</h3>
+  <p class="description">{project.description}</p>
+  <ul class="tags" aria-label="Technologies">
+    {project.tags.map((tag) => <li>{tag}</li>)}
+  </ul>
+  <div class="links">
+    {project.repo && (
+      <a href={project.repo} target="_blank" rel="noopener noreferrer">
+        Code <span aria-hidden="true">↗</span>
+      </a>
+    )}
+    {project.demo && (
+      <a href={project.demo} target="_blank" rel="noopener noreferrer">
+        Live demo <span aria-hidden="true">↗</span>
+      </a>
+    )}
+  </div>
+</article>
+
+<style>
+  .card {
+    display: flex;
+    flex-direction: column;
+    gap: 0.9rem;
+    padding: 1.5rem;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    transition: border-color 0.15s, transform 0.15s;
+  }
+
+  .card:hover {
+    border-color: var(--accent);
+    transform: translateY(-2px);
+  }
+
+  h3 {
+    font-size: 1.35rem;
+  }
+
+  .description {
+    margin: 0;
+    color: var(--muted);
+    flex-grow: 1;
+  }
+
+  .tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  .tags li {
+    font-size: 0.78rem;
+    font-weight: 600;
+    padding: 0.2rem 0.6rem;
+    border-radius: 999px;
+    background: var(--accent-soft);
+    color: var(--accent);
+  }
+
+  .links {
+    display: flex;
+    gap: 1.25rem;
+    font-size: 0.95rem;
+    font-weight: 600;
+  }
+
+  .links a {
+    text-decoration: none;
+  }
+
+  .links a:hover {
+    text-decoration: underline;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .card,
+    .card:hover {
+      transition: none;
+      transform: none;
+    }
+  }
+</style>
