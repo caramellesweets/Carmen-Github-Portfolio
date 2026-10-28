@@ -37,3 +37,18 @@ src/
 | `npm run dev`     | Start the dev server at `localhost:4321` |
 | `npm run build`   | Build the static site into `./dist/`     |
 | `npm run preview` | Preview the production build locally     |
+| `npm run deploy`  | Build and publish to the `gh-pages` branch |
+
+## Deploying
+
+The site is hosted on GitHub Pages from the `gh-pages` branch at
+https://caramellesweets.github.io/Carmen-Github-Portfolio/.
+
+After making changes, commit them to `main`, then run:
+
+```bash
+npm run deploy
+```
+
+This builds the site, commits `dist/` to `gh-pages`, and pushes it. Use
+`npm run deploy -- --dry-run` to commit locally without pushing.
