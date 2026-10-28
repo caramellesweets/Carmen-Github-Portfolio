@@ -41,11 +41,13 @@ export type Project = {
   image: ImageMetadata;
   // CSS object-position for the thumbnail crop (defaults to centered).
   position?: string;
+  // Case study page this thumbnail links to (path within the site).
+  href?: string;
 };
 
 // Shown left to right, top to bottom in a 3-column grid.
 export const projects: Project[] = [
-  { title: "Raptors x Hellmann's: Sauce N' Dunk", image: sauceNDunk },
+  { title: "Raptors x Hellmann's: Sauce N' Dunk", image: sauceNDunk, href: '/sauce-n-dunk/' },
   { title: 'TFC x LG: Ultra Striker', image: ultraStriker },
   { title: 'Argos x Coinbase: Tapdown Tycoon', image: tapdownTycoon },
   { title: 'Raptors x Bell: Crowd Connect', image: crowdConnect, position: '28.6% 50%' },

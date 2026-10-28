@@ -1,0 +1,147 @@
+---
+import { Image } from 'astro:assets';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { at, vw } from '../utils/canvas';
+import { withBase } from '../utils/url';
+import backIcon from '../assets/work/icon-back.png';
+import banner from '../assets/sauce-n-dunk/banner.jpg';
+import screen1 from '../assets/sauce-n-dunk/screen-1.png';
+import screen2 from '../assets/sauce-n-dunk/screen-2.png';
+import screen3 from '../assets/sauce-n-dunk/screen-3.png';
+import screen4 from '../assets/sauce-n-dunk/screen-4.png';
+import screen5 from '../assets/sauce-n-dunk/screen-5.png';
+
+const title = "Sauce N' Dunk";
+const clients = "Toronto Raptors & Hellmann's";
+
+const overview = [
+  "Sauce N' Dunk is a sidescrolling platformer game where the Raptor is dunking on specially designed Hellmann's Mayos that each have their own unique superpowers that block the Raptor's shot!",
+  "Hellmann's was looking for opportunities to promote their upcoming flavours to increase brand awareness. We personified each flavour into a unique character. Each mayo's superpower is designed around the intensity and distinct taste profile of each mayo flavour along with their different environmental biomes.",
+  'My role as a designer for this project was lead artist. I developed visual concepts, game assets, UI and marketing materials.',
+];
+
+const details = [
+  { label: 'Role', value: 'Lead Artist & Designer - Concept, Visual Production, Marketing Materials' },
+  { label: 'Tools', value: 'Aesprite, After Effects, Figma' },
+  { label: 'Team', value: 'Fahad Edwards, Ruqian Da, Nic Bradford, Daniel Houseley, Eric Dickinson' },
+];
+
+const screens = [screen1, screen2, screen3, screen4, screen5];
+const SCREEN = { y: 511, w: 163, h: 290, xs: [67, 248, 430, 612, 794] };
+---
+
+<BaseLayout title={title} description={overview[0]}>
+  <div class="canvas-wrap">
+    <main class="canvas" style="--canvas-height: 1075">
+      <a class="back" href={withBase('/')} style={at(44, 16, 23, 50)}>
+        <img src={backIcon.src} alt="" width="18" height="18" />
+        <span class="visually-hidden">Back to home</span>
+      </a>
+
+      <h1 class="t-name" style={at(67, 66, 511)}>{title}</h1>
+      <p class="t-meta" style={at(67, 102, 435)}>
+        <strong class="label">Clients:</strong> <span class="value-wide">{clients}</span>
+      </p>
+
+      <!-- Banner -->
+      <div class="banner-bg" aria-hidden="true" style={at(67, 143, 890, 204)}></div>
+      <Image
+        class="banner"
+        src={banner}
+        alt="Sauce N' Dunk key art: the Raptor dunking past the Hellmann's mayo characters"
+        width={1780}
+        widths={[890, 1780, 2670]}
+        sizes={vw(890)}
+        loading="eager"
+        style={at(67, 143, 890, 204)}
+      />
+
+      <!-- Overview -->
+      <h2 class="t-heading" style={at(67, 370, 480)}>Overview:</h2>
+      <p class="t-body" style={at(67, 397, 435)}>{overview[0]}</p>
+      <p class="t-body" style={at(67, 429, 435)}>{overview[1]}</p>
+      <p class="t-body" style={at(67, 474, 435)}>{overview[2]}</p>
+
+      {details.map((item, i) => (
+        <p class="t-meta" style={at(659, 397 + i * 16, 435)}>
+          <strong class="label">{item.label}:</strong> {item.value}
+        </p>
+      ))}
+
+      <!-- Gameplay screens -->
+      {screens.map((screen, i) => (
+        <Image
+          class="screen"
+          src={screen}
+          alt={`Sauce N' Dunk gameplay screen ${i + 1}`}
+          width={652}
+          widths={[163, 326, 489, 652]}
+          sizes={vw(SCREEN.w)}
+          style={at(SCREEN.xs[i], SCREEN.y, SCREEN.w, SCREEN.h)}
+        />
+      ))}
+    </main>
+  </div>
+</BaseLayout>
+
+<style>
+  .back {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: calc(5 * var(--u));
+    transform: scaleX(-1);
+    transition: background-color 0.15s;
+  }
+
+  .back img {
+    width: calc(18 * var(--u));
+    height: calc(18 * var(--u));
+    object-fit: contain;
+  }
+
+  .back:hover {
+    background-color: rgba(200, 0, 0, 0.8);
+  }
+
+  .back:hover img {
+    filter: brightness(0) invert(1);
+  }
+
+  .t-meta {
+    font-size: calc(8 * var(--u));
+    line-height: calc(16 * var(--u));
+    font-weight: 387;
+    letter-spacing: calc(-0.1 * var(--u));
+    white-space: nowrap;
+  }
+
+  .t-meta .label {
+    font-weight: 632;
+  }
+
+  .t-meta .value-wide {
+    letter-spacing: calc(-0.2 * var(--u));
+  }
+
+  .t-body {
+    font-size: calc(8 * var(--u));
+    line-height: calc(11 * var(--u));
+    font-weight: 387;
+    letter-spacing: calc(-0.3 * var(--u));
+  }
+
+  .banner-bg {
+    background: var(--hero);
+    border-radius: calc(20 * var(--u));
+  }
+
+  .banner {
+    object-fit: cover;
+    border-radius: calc(20 * var(--u));
+  }
+
+  .screen {
+    object-fit: cover;
+  }
+</style>

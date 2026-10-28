@@ -45,6 +45,49 @@ a {
   color: inherit;
 }
 
+/* Type styles (sizes in design pixels; Inter variable weights match the original). */
+.t-name {
+  font-size: calc(29 * var(--u));
+  line-height: calc(25 * var(--u));
+  font-weight: 681;
+  text-transform: uppercase;
+}
+
+.t-heading {
+  font-size: calc(19 * var(--u));
+  line-height: calc(19 * var(--u));
+  font-weight: 702;
+  letter-spacing: calc(-0.2 * var(--u));
+}
+
+.t-strong {
+  font-size: calc(10 * var(--u));
+  line-height: calc(18 * var(--u));
+  font-weight: 702;
+  letter-spacing: calc(-0.2 * var(--u));
+}
+
+.t-small {
+  font-size: calc(8 * var(--u));
+  line-height: calc(16 * var(--u));
+  font-weight: 387;
+  letter-spacing: calc(-0.2 * var(--u));
+}
+
+.t-list {
+  padding: 0;
+  list-style: none;
+  font-size: calc(8 * var(--u));
+  line-height: calc(11 * var(--u));
+  font-weight: 387;
+  letter-spacing: calc(-0.1 * var(--u));
+}
+
+h1,
+h2 {
+  font-family: inherit;
+}
+
 :focus-visible {
   outline: 2px solid #1032cf;
   outline-offset: 2px;
