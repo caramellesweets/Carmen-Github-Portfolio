@@ -1,57 +1,57 @@
 // All the editable content for the site lives here.
-// Replace the placeholder text with your own details.
+import type { ImageMetadata } from 'astro';
+import sauceNDunk from '../assets/work/sauce-n-dunk.png';
+import ultraStriker from '../assets/work/ultra-striker.png';
+import tapdownTycoon from '../assets/work/tapdown-tycoon.png';
+import crowdConnect from '../assets/work/crowd-connect.jpg';
+import homeIceAdvantage from '../assets/work/home-ice-advantage.png';
+import shutoutSuperstars from '../assets/work/shutout-superstars.png';
 
 export const site = {
   name: 'Carmen Yuen',
-  role: 'Developer & Designer',
-  tagline: 'I build thoughtful, accessible things for the web.',
-  intro:
-    'Welcome to my corner of the internet. This is where I share the projects I have built, the things I am learning, and how to get in touch.',
-  location: 'Your City',
-  email: 'carmenyuen275@gmail.com',
+  title: 'Carmen Yuen - Artist',
+  description: 'Carmen Yuen is a multidisciplinary designer and artist in Toronto.',
+  nav: ['Home', 'Gallery', 'About'],
   links: {
-    github: 'https://github.com/caramellesweets',
-    linkedin: 'https://www.linkedin.com/in/your-profile',
+    instagram: 'https://www.instagram.com/caramellesart/?hl=en',
+    linkedin: 'http://www.linkedin.com/in/carmen-yuen-2b4aa7186',
   },
 };
 
-export const about = {
-  paragraphs: [
-    'Write a few sentences about yourself here: what you do, what you care about, and what kind of work you are looking for.',
-    'You can mention your background, what got you into building things, and what you are currently exploring.',
-  ],
-  skills: ['HTML', 'CSS', 'JavaScript', 'TypeScript', 'Astro', 'Git', 'Figma'],
+export const education = {
+  school: 'OCAD University, Toronto',
+  detail: 'Bachelor of Fine Arts - Drawing & Painting: Expanded Animation',
 };
+
+export const experience = {
+  role: 'Multidisciplinary Designer',
+  detail: 'MLSE - Maple Leaf Sports & Entertainment',
+};
+
+export const expertise = [
+  'Creative Strategy & Collaboration',
+  'Game Art, Development & Design',
+  'Graphic Design',
+  'Illustration',
+  'Video & Motion Content',
+];
 
 export type Project = {
   title: string;
-  description: string;
-  tags: string[];
-  repo?: string;
-  demo?: string;
+  image: ImageMetadata;
+  // CSS object-position for the thumbnail crop (defaults to centered).
+  position?: string;
 };
 
+// Shown left to right, top to bottom in a 3-column grid.
 export const projects: Project[] = [
-  {
-    title: 'This Portfolio',
-    description:
-      'A fast, static personal site built with Astro. Zero client-side JavaScript beyond the theme toggle.',
-    tags: ['Astro', 'CSS'],
-    repo: 'https://github.com/caramellesweets/Carmen-Github-Portfolio',
-  },
-  {
-    title: 'Project Two',
-    description:
-      'A short description of what this project does, the problem it solves, and what you learned building it.',
-    tags: ['JavaScript', 'API'],
-    repo: 'https://github.com/your-username/project-two',
-    demo: 'https://example.com',
-  },
-  {
-    title: 'Project Three',
-    description:
-      'Another highlight. Keep each description to two or three sentences so the grid stays easy to scan.',
-    tags: ['TypeScript', 'Design'],
-    repo: 'https://github.com/your-username/project-three',
-  },
+  { title: "Raptors x Hellmann's: Sauce N' Dunk", image: sauceNDunk },
+  { title: 'TFC x LG: Ultra Striker', image: ultraStriker },
+  { title: 'Argos x Coinbase: Tapdown Tycoon', image: tapdownTycoon },
+  { title: 'Raptors x Bell: Crowd Connect', image: crowdConnect, position: '28.6% 50%' },
+  { title: 'MLSE ARCADE x Tradable Bits', image: homeIceAdvantage },
+  { title: 'Toronto Maple Leafs x OLG: Home Ice Advantage', image: homeIceAdvantage },
+  { title: "Raptors x McDonald's: Beyond The Arch (2025)", image: homeIceAdvantage },
+  { title: 'Lollapalooza: Legend of Lolla 2', image: shutoutSuperstars },
+  { title: 'Toronto Maple Leafs x PointsBet: Shutout Superstars', image: shutoutSuperstars },
 ];

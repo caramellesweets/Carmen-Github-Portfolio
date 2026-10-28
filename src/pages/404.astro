@@ -1,31 +1,45 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
+import { site } from '../data/site';
 import { withBase } from '../utils/url';
 ---
 
 <BaseLayout title="Page not found">
-  <section class="not-found">
-    <div class="container">
-      <p class="eyebrow">404</p>
-      <h1>This page wandered off.</h1>
-      <p>The page you're looking for doesn't exist or has moved.</p>
-      <a class="button button-primary" href={withBase('/')}>Back home</a>
-    </div>
-  </section>
+  <div class="canvas-wrap">
+    <main class="canvas" style="--canvas-height: 600">
+      <a class="t-name" href={withBase('/')}>{site.name}</a>
+      <h1 class="t-heading">Page not found</h1>
+      <p class="t-strong">This page doesn't exist. <a href={withBase('/')}>Back home</a></p>
+    </main>
+  </div>
 </BaseLayout>
 
 <style>
-  .not-found {
-    padding: 8rem 0;
-    text-align: center;
+  .t-name {
+    left: calc(67 * var(--u));
+    top: calc(49 * var(--u));
+    font-size: calc(29 * var(--u));
+    line-height: calc(25 * var(--u));
+    font-weight: 681;
+    text-transform: uppercase;
+    text-decoration: none;
   }
 
-  h1 {
-    font-size: clamp(2rem, 6vw, 3.25rem);
+  .t-heading {
+    left: calc(67 * var(--u));
+    top: calc(140 * var(--u));
+    font-size: calc(19 * var(--u));
+    line-height: calc(19 * var(--u));
+    font-weight: 702;
+    letter-spacing: calc(-0.2 * var(--u));
   }
 
-  p:not(.eyebrow) {
-    color: var(--muted);
-    margin: 1rem 0 2rem;
+  .t-strong {
+    left: calc(67 * var(--u));
+    top: calc(170 * var(--u));
+    font-size: calc(10 * var(--u));
+    line-height: calc(18 * var(--u));
+    font-weight: 702;
+    letter-spacing: calc(-0.2 * var(--u));
   }
 </style>

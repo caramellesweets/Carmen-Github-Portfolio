@@ -1,28 +1,7 @@
 :root {
-  --bg: #faf8f5;
-  --surface: #ffffff;
-  --text: #1c1a17;
-  --muted: #5f5a53;
-  --border: #e7e2da;
-  --accent: #1f5f57;
-  --accent-soft: #e3efec;
-
-  --font-sans: system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-  --font-serif: 'Iowan Old Style', 'Palatino Linotype', Palatino, Georgia, serif;
-  --max-width: 64rem;
-  --radius: 14px;
-  color-scheme: light;
-}
-
-:root[data-theme='dark'] {
-  --bg: #141412;
-  --surface: #1c1c19;
-  --text: #ece8e1;
-  --muted: #a39d93;
-  --border: #2e2d29;
-  --accent: #7cc4b6;
-  --accent-soft: #1e302c;
-  color-scheme: dark;
+  --ink: #131212;
+  --hero: #daefff;
+  --tile: #000000;
 }
 
 *,
@@ -31,102 +10,44 @@
   box-sizing: border-box;
 }
 
-html {
-  scroll-behavior: smooth;
-  scroll-padding-top: 5rem;
-}
-
+html,
 body {
   margin: 0;
-  background: var(--bg);
-  color: var(--text);
-  font-family: var(--font-sans);
-  font-size: 1.0625rem;
-  line-height: 1.65;
+  background: #ffffff;
+  color: var(--ink);
+  font-family: 'Inter', system-ui, sans-serif;
   -webkit-font-smoothing: antialiased;
 }
 
-h1,
-h2,
-h3 {
-  font-family: var(--font-serif);
-  font-weight: 600;
-  line-height: 1.15;
-  letter-spacing: -0.01em;
+/*
+  The page is designed on a 1024px-wide canvas (like the original Readymag layout)
+  and scaled to fit the window. --u is one design pixel at the current window width.
+*/
+.canvas-wrap {
+  container-type: inline-size;
+  width: 100%;
+  overflow: hidden;
+}
+
+.canvas {
+  --u: calc(100cqw / 1024);
+  position: relative;
+  width: 100%;
+  height: calc(var(--canvas-height, 1436) * var(--u));
+}
+
+.canvas > * {
+  position: absolute;
   margin: 0;
 }
 
 a {
-  color: var(--accent);
-  text-underline-offset: 3px;
-}
-
-a:hover {
-  text-decoration-thickness: 2px;
+  color: inherit;
 }
 
 :focus-visible {
-  outline: 2px solid var(--accent);
-  outline-offset: 3px;
-  border-radius: 4px;
-}
-
-.container {
-  width: 100%;
-  max-width: var(--max-width);
-  margin: 0 auto;
-  padding: 0 1.25rem;
-}
-
-.section {
-  padding: 5rem 0;
-  border-top: 1px solid var(--border);
-}
-
-.eyebrow {
-  font-family: var(--font-sans);
-  font-size: 0.8rem;
-  font-weight: 600;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  color: var(--accent);
-  margin: 0 0 0.75rem;
-}
-
-.section-title {
-  font-size: clamp(1.75rem, 4vw, 2.5rem);
-  margin-bottom: 2rem;
-}
-
-.button {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.5rem;
-  padding: 0.7rem 1.25rem;
-  border-radius: 999px;
-  font-weight: 600;
-  font-size: 0.95rem;
-  text-decoration: none;
-  border: 1px solid var(--accent);
-  transition: background-color 0.15s, color 0.15s;
-}
-
-.button-primary {
-  background: var(--accent);
-  color: var(--bg);
-}
-
-.button-primary:hover {
-  background: transparent;
-  color: var(--accent);
-}
-
-.button-ghost {
-  color: var(--accent);
-}
-
-.button-ghost:hover {
-  background: var(--accent-soft);
+  outline: 2px solid #1032cf;
+  outline-offset: 2px;
 }
 
 .visually-hidden {
@@ -136,10 +57,4 @@ a:hover {
   overflow: hidden;
   clip: rect(0 0 0 0);
   white-space: nowrap;
-}
-
-@media (prefers-reduced-motion: reduce) {
-  html {
-    scroll-behavior: auto;
-  }
 }

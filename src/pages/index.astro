@@ -1,165 +1,170 @@
 ---
+import { Image } from 'astro:assets';
 import BaseLayout from '../layouts/BaseLayout.astro';
-import ProjectCard from '../components/ProjectCard.astro';
-import { site, about, projects } from '../data/site';
+import { site, education, experience, expertise, projects } from '../data/site';
+import instagramIcon from '../assets/work/icon-instagram.png';
+import linkedinIcon from '../assets/work/icon-linkedin.png';
+
+// Positions are in design pixels on the 1024px canvas; u() scales them to the window.
+const u = (n: number) => `calc(${n} * var(--u))`;
+const at = (x: number, y: number, w: number, h?: number) =>
+  `left:${u(x)};top:${u(y)};width:${u(w)}` + (h === undefined ? '' : `;height:${u(h)}`);
+
+const GRID = { x: 67, y: 616, colStep: 304, rowStep: 202, w: 282, h: 169 };
+const tiles = projects.map((project, i) => ({
+  ...project,
+  x: GRID.x + (i % 3) * GRID.colStep,
+  y: GRID.y + Math.floor(i / 3) * GRID.rowStep,
+}));
+
+// Thumbnails render at 282/1024 of the window width.
+const thumbSizes = '27.6vw';
 ---
 
 <BaseLayout>
-  <section class="hero">
-    <div class="container">
-      <p class="eyebrow">{site.role} · {site.location}</p>
-      <h1>Hi, I'm {site.name.split(' ')[0]}.<br /><span>{site.tagline}</span></h1>
-      <p class="intro">{site.intro}</p>
-      <div class="actions">
-        <a class="button button-primary" href="#projects">See my work</a>
-        <a class="button button-ghost" href={site.links.github} target="_blank" rel="noopener noreferrer">
-          GitHub <span aria-hidden="true">↗</span>
-        </a>
-      </div>
-    </div>
-  </section>
+  <div class="canvas-wrap">
+    <main class="canvas">
+      <!-- Header -->
+      <h1 class="t-name" style={at(67, 49, 511)}>{site.name}</h1>
 
-  <section id="about" class="section">
-    <div class="container about">
-      <div>
-        <p class="eyebrow">About</p>
-        <h2 class="section-title">A little about me</h2>
-      </div>
-      <div>
-        {about.paragraphs.map((p) => <p>{p}</p>)}
-        <h3 class="skills-heading">Tools I use</h3>
-        <ul class="skills">
-          {about.skills.map((skill) => <li>{skill}</li>)}
-        </ul>
-      </div>
-    </div>
-  </section>
+      <nav aria-label="Main" class="nav-wrap" style={at(630, 52, 200, 18)}>
+        {site.nav.map((item, i) => (
+          <span class="t-nav" style={`left:${u([0, 75, 159][i])}`}>{item}</span>
+        ))}
+      </nav>
 
-  <section id="projects" class="section">
-    <div class="container">
-      <p class="eyebrow">Projects</p>
-      <h2 class="section-title">Selected work</h2>
-      <div class="grid">
-        {projects.map((project) => <ProjectCard project={project} />)}
-      </div>
-    </div>
-  </section>
+      <a class="social" href={site.links.instagram} target="_blank" rel="noopener noreferrer" style={at(861, 38, 42, 41.59)}>
+        <Image src={instagramIcon} alt="" width={120} widths={[60, 120]} sizes="3vw" style={at(6, 6, 30, 30)} />
+        <span class="visually-hidden">Instagram (opens in a new window)</span>
+      </a>
+      <a class="social" href={site.links.linkedin} target="_blank" rel="noopener noreferrer" style={at(915, 38, 42, 41.59)}>
+        <Image src={linkedinIcon} alt="" width={112} widths={[56, 112]} sizes="3vw" style={at(8, 7.75, 28, 25.76)} />
+        <span class="visually-hidden">LinkedIn (opens in a new window)</span>
+      </a>
 
-  <section id="contact" class="section">
-    <div class="container contact">
-      <p class="eyebrow">Contact</p>
-      <h2 class="section-title">Let's work together</h2>
-      <p class="contact-text">
-        I'm open to new opportunities and collaborations. The best way to reach me is by email.
-      </p>
-      <a class="button button-primary" href={`mailto:${site.email}`}>{site.email}</a>
-      <ul class="socials">
-        <li><a href={site.links.github} target="_blank" rel="noopener noreferrer">GitHub</a></li>
-        <li><a href={site.links.linkedin} target="_blank" rel="noopener noreferrer">LinkedIn</a></li>
+      <!-- Hero panel -->
+      <div class="hero" aria-hidden="true" style={at(67, 98, 890, 261)}></div>
+      <div class="hero" aria-hidden="true" style={at(488, 240, 469, 120)}></div>
+
+      <!-- Education / Experience -->
+      <h2 class="t-heading" style={at(67, 378, 480)}>Education</h2>
+      <p class="t-strong" style={at(67, 405, 435)}>{education.school}</p>
+      <p class="t-small" style={at(67, 423, 435)}>{education.detail}</p>
+
+      <h2 class="t-heading" style={at(544, 378, 480)}>Experience</h2>
+      <p class="t-strong" style={at(544, 405, 480)}>{experience.role}</p>
+      <p class="t-small" style={at(544, 423, 435)}>{experience.detail}</p>
+
+      <!-- Creative Expertise -->
+      <h2 class="t-heading" style={at(67, 459, 480)}>Creative Expertise</h2>
+      <ul class="t-list" style={at(67, 489, 435)}>
+        {expertise.map((item) => <li>{item}</li>)}
       </ul>
-    </div>
-  </section>
+
+      <!-- Featured Work -->
+      <h2 class="t-heading" style={at(67, 571, 480)}>Featured Work</h2>
+      {tiles.map((tile) => (
+        <figure class="tile" style={at(tile.x, tile.y, GRID.w, GRID.h + 18)}>
+          <Image
+            src={tile.image}
+            alt={tile.title}
+            widths={[282, 564, 846, 1128]}
+            sizes={thumbSizes}
+            style={`height:${u(GRID.h)};object-position:${tile.position ?? '50% 50%'}`}
+          />
+          <figcaption class="t-strong">{tile.title}</figcaption>
+        </figure>
+      ))}
+    </main>
+  </div>
 </BaseLayout>
 
 <style>
+  /* Type styles (sizes in design pixels; Inter variable weights match the original). */
+  .t-name {
+    font-size: calc(29 * var(--u));
+    line-height: calc(25 * var(--u));
+    font-weight: 681;
+    text-transform: uppercase;
+  }
+
+  .t-nav {
+    position: absolute;
+    top: 0;
+    font-size: calc(13 * var(--u));
+    line-height: calc(18 * var(--u));
+    font-weight: 702;
+    letter-spacing: calc(-0.2 * var(--u));
+    white-space: nowrap;
+  }
+
+  .t-heading {
+    font-size: calc(19 * var(--u));
+    line-height: calc(19 * var(--u));
+    font-weight: 702;
+    letter-spacing: calc(-0.2 * var(--u));
+  }
+
+  .t-strong {
+    font-size: calc(10 * var(--u));
+    line-height: calc(18 * var(--u));
+    font-weight: 702;
+    letter-spacing: calc(-0.2 * var(--u));
+  }
+
+  .t-small {
+    font-size: calc(8 * var(--u));
+    line-height: calc(16 * var(--u));
+    font-weight: 387;
+    letter-spacing: calc(-0.2 * var(--u));
+  }
+
+  .t-list {
+    padding: 0;
+    list-style: none;
+    font-size: calc(8 * var(--u));
+    line-height: calc(11 * var(--u));
+    font-weight: 387;
+    letter-spacing: calc(-0.1 * var(--u));
+  }
+
+  h1,
+  h2 {
+    font-family: inherit;
+  }
+
+  .nav-wrap {
+    display: block;
+  }
+
+  .social {
+    display: block;
+    background: var(--tile);
+    border-radius: calc(10 * var(--u));
+  }
+
+  .social img {
+    position: absolute;
+    object-fit: cover;
+  }
+
   .hero {
-    padding: clamp(4rem, 12vw, 8rem) 0 clamp(3.5rem, 10vw, 6rem);
+    background: var(--hero);
+    border-radius: calc(20 * var(--u));
   }
 
-  h1 {
-    font-size: clamp(2.4rem, 7vw, 4.25rem);
-    max-width: 18ch;
-  }
-
-  h1 span {
-    color: var(--muted);
-    font-weight: 400;
-  }
-
-  .intro {
-    max-width: 38rem;
-    margin: 1.5rem 0 2rem;
-    font-size: 1.15rem;
-    color: var(--muted);
-  }
-
-  .actions {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.75rem;
-  }
-
-  .about {
-    display: grid;
-    gap: 1rem 3rem;
-  }
-
-  .about p {
-    margin: 0 0 1rem;
-  }
-
-  .skills-heading {
-    font-family: var(--font-sans);
-    font-size: 0.95rem;
-    font-weight: 600;
-    margin: 1.75rem 0 0.75rem;
-  }
-
-  .skills {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.5rem;
-    list-style: none;
+  .tile {
     margin: 0;
-    padding: 0;
   }
 
-  .skills li {
-    padding: 0.35rem 0.85rem;
-    border: 1px solid var(--border);
-    border-radius: 999px;
-    background: var(--surface);
-    font-size: 0.9rem;
+  .tile img {
+    display: block;
+    width: 100%;
+    object-fit: cover;
+    border-radius: calc(10 * var(--u));
   }
 
-  .grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(min(100%, 18rem), 1fr));
-    gap: 1.25rem;
-  }
-
-  .contact {
-    text-align: center;
-  }
-
-  .contact .section-title {
-    margin-bottom: 1rem;
-  }
-
-  .contact-text {
-    max-width: 32rem;
-    margin: 0 auto 2rem;
-    color: var(--muted);
-  }
-
-  .contact .button {
-    max-width: 100%;
-    overflow-wrap: anywhere;
-  }
-
-  .socials {
-    display: flex;
-    justify-content: center;
-    gap: 1.5rem;
-    list-style: none;
-    margin: 2rem 0 0;
-    padding: 0;
-    font-weight: 600;
-  }
-
-  @media (min-width: 48rem) {
-    .about {
-      grid-template-columns: 1fr 2fr;
-    }
+  .tile figcaption {
+    white-space: nowrap;
   }
 </style>
