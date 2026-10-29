@@ -48,7 +48,7 @@ export type Project = {
 // Shown left to right, top to bottom in a 3-column grid.
 export const projects: Project[] = [
   { title: "Raptors x Hellmann's: Sauce N' Dunk", image: sauceNDunk, href: '/sauce-n-dunk/' },
-  { title: 'TFC x LG: Ultra Striker', image: ultraStriker },
+  { title: 'TFC x LG: Ultra Striker', image: ultraStriker, href: '/ultra-striker/' },
   { title: 'Argos x Coinbase: Tapdown Tycoon', image: tapdownTycoon },
   { title: 'Raptors x Bell: Crowd Connect', image: crowdConnect, position: '28.6% 50%' },
   { title: 'MLSE ARCADE x Tradable Bits', image: homeIceAdvantage },

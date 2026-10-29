@@ -1,0 +1,205 @@
+---
+import { Image } from 'astro:assets';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { at, vw } from '../utils/canvas';
+import { withBase } from '../utils/url';
+import backIcon from '../assets/work/icon-back.png';
+import banner from '../assets/ultra-striker/banner.jpg';
+import screen2026a from '../assets/ultra-striker/screen-2026-1.png';
+import screen2026b from '../assets/ultra-striker/screen-2026-2.png';
+import screen2026c from '../assets/ultra-striker/screen-2026-3.jpg';
+import screen2026d from '../assets/ultra-striker/screen-2026-4.jpg';
+import screen2026e from '../assets/ultra-striker/screen-2026-5.jpg';
+import screen2025a from '../assets/ultra-striker/screen-2025-1.png';
+import screen2025b from '../assets/ultra-striker/screen-2025-2.png';
+import screen2025c from '../assets/ultra-striker/screen-2025-3.png';
+import screen2025d from '../assets/ultra-striker/screen-2025-4.png';
+import screen2025e from '../assets/ultra-striker/screen-2025-5.png';
+
+const title = 'Ultra Striker';
+const clients = 'Toronto FC & LG';
+
+const overview = [
+  'Ultra Striker was a promotional paper-toss-style arcade game in featuring multiple difficulty modes. Following the success of its first run, LG brought the game back for a second iteration with new game features.',
+  'LG came to the team with the goal of increasing their brand awareness for three of their home appliances. Each appliance was designed with attention to real-world accuracy, with consideration given to which items would realistically belong to each appliance. Many featured tossable items maintained consistency with the TFC branding.',
+  "Level difficulty was tailored to each appliance's design in order to create unique gameplay experiences that complimented both brands.",
+  'My role as a designer for this project was lead artist. I developed visual concepts, game assets, UI and marketing materials.',
+];
+const OVERVIEW_Y = [397, 429, 477, 513];
+
+const details = [
+  { label: 'Role', value: 'Lead Artist & Designer - Concept, Visual Production, Marketing Materials' },
+  { label: 'Tools', value: 'After Effects, Figma' },
+  { label: 'Team', value: 'Fahad Edwards, Nic Bradford, Eric Dickinson' },
+];
+
+// Each year's social video and gameplay screens, with the year label centred above the screens.
+const VIDEO = { x: 67, w: 235, h: 221 };
+const SCREEN = { w: 122, h: 221, xs: [325, 453, 580, 707, 834] };
+const rows = [
+  { year: '2026', labelX: 293, labelY: 536, y: 557, video: 'ultra-striker/social-2026.mp4', screens: [screen2026a, screen2026b, screen2026c, screen2026d, screen2026e] },
+  { year: '2025', labelX: 295, labelY: 804, y: 828, video: 'ultra-striker/social-2025.mp4', screens: [screen2025a, screen2025b, screen2025c, screen2025d, screen2025e] },
+];
+---
+
+<BaseLayout title={title} description={overview[0]}>
+  <div class="canvas-wrap">
+    <main class="canvas" style="--canvas-height: 1344">
+      <a class="back" href={withBase('/')} style={at(44, 16, 23, 50)}>
+        <img src={backIcon.src} alt="" width="18" height="18" />
+        <span class="visually-hidden">Back to home</span>
+      </a>
+
+      <h1 class="t-name" style={at(67, 66, 511)}>{title}</h1>
+      <p class="t-meta" style={at(67, 102, 435)}>
+        <strong class="label">Clients:</strong> <span class="value-wide">{clients}</span>
+      </p>
+
+      <!-- Banner -->
+      <div class="banner-bg" aria-hidden="true" style={at(67, 143, 890, 204)}></div>
+      <Image
+        class="banner"
+        src={banner}
+        alt="Ultra Striker key art for Toronto FC and LG"
+        width={1780}
+        widths={[890, 1780, 2670]}
+        sizes={vw(890)}
+        loading="eager"
+        style={at(67, 143, 890, 204)}
+      />
+
+      <!-- Overview -->
+      <h2 class="t-heading" style={at(67, 370, 480)}>Overview:</h2>
+      {overview.map((text, i) => (
+        <p class="t-body" style={at(67, OVERVIEW_Y[i], 435)}>{text}</p>
+      ))}
+
+      {details.map((item, i) => (
+        <p class="t-meta" style={at(659, 397 + i * 16, 435)}>
+          <strong class="label">{item.label}:</strong> {item.value}
+        </p>
+      ))}
+
+      <!-- Gameplay screens -->
+      {rows.map((row) => (
+        <>
+          <video
+            class="video"
+            data-src={withBase(row.video)}
+            aria-label={`Ultra Striker ${row.year} social video`}
+            muted
+            loop
+            playsinline
+            preload="none"
+            style={at(VIDEO.x, row.y, VIDEO.w, VIDEO.h)}
+          ></video>
+          <h3 class="t-year" style={at(row.labelX, row.labelY, 435)}>{row.year}</h3>
+          {row.screens.map((screen, i) => (
+            <Image
+              class="screen"
+              src={screen}
+              alt={`Ultra Striker ${row.year} gameplay screen ${i + 1}`}
+              width={488}
+              widths={[122, 244, 366, 488]}
+              sizes={vw(SCREEN.w)}
+              style={at(SCREEN.xs[i], row.y, SCREEN.w, SCREEN.h)}
+            />
+          ))}
+        </>
+      ))}
+    </main>
+  </div>
+</BaseLayout>
+
+<script>
+  // Load and start each video only once it is about to scroll into view.
+  const observer = new IntersectionObserver(
+    (entries) => {
+      for (const entry of entries) {
+        if (!entry.isIntersecting) continue;
+        const video = entry.target as HTMLVideoElement;
+        video.src = video.dataset.src!;
+        video.play().catch(() => {});
+        observer.unobserve(video);
+      }
+    },
+    { rootMargin: '300px' },
+  );
+  document.querySelectorAll<HTMLVideoElement>('video[data-src]').forEach((video) => observer.observe(video));
+</script>
+
+<style>
+  .back {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: calc(5 * var(--u));
+    transform: scaleX(-1);
+    transition: background-color 0.15s;
+  }
+
+  .back img {
+    width: calc(18 * var(--u));
+    height: calc(18 * var(--u));
+    object-fit: contain;
+  }
+
+  .back:hover {
+    background-color: rgba(200, 0, 0, 0.8);
+  }
+
+  .back:hover img {
+    filter: brightness(0) invert(1);
+  }
+
+  .t-meta {
+    font-size: calc(8 * var(--u));
+    line-height: calc(16 * var(--u));
+    font-weight: 387;
+    letter-spacing: calc(-0.1 * var(--u));
+    white-space: nowrap;
+  }
+
+  .t-meta .label {
+    font-weight: 632;
+  }
+
+  .t-meta .value-wide {
+    letter-spacing: calc(-0.2 * var(--u));
+  }
+
+  .t-body {
+    font-size: calc(8 * var(--u));
+    line-height: calc(11 * var(--u));
+    font-weight: 387;
+    letter-spacing: calc(-0.3 * var(--u));
+  }
+
+  .t-year {
+    font-size: calc(8 * var(--u));
+    line-height: calc(16 * var(--u));
+    font-weight: 632;
+    letter-spacing: calc(-0.3 * var(--u));
+    text-align: center;
+  }
+
+  .banner-bg {
+    background: var(--hero);
+    border-radius: calc(20 * var(--u));
+  }
+
+  .banner {
+    object-fit: cover;
+    border-radius: calc(20 * var(--u));
+  }
+
+  .screen {
+    object-fit: cover;
+  }
+
+  .video {
+    display: block;
+    background: #000;
+    object-fit: contain;
+  }
+</style>
