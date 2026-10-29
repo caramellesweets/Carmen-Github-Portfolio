@@ -1,6 +1,9 @@
 ---
 import { Image } from 'astro:assets';
 import BaseLayout from '../layouts/BaseLayout.astro';
+import TopNav from '../components/TopNav.astro';
+import VideoPlayer from '../components/VideoPlayer.astro';
+import { site } from '../data/site';
 import { at, vw } from '../utils/canvas';
 import { withBase } from '../utils/url';
 import backIcon from '../assets/work/icon-back.png';
@@ -27,16 +30,19 @@ const details = [
 ];
 
 const screens = [screen1, screen2, screen3, screen4, screen5];
-const SCREEN = { y: 511, w: 163, h: 290, xs: [67, 248, 430, 612, 794] };
+const VIDEO = { x: 67, y: 512, w: 235, h: 221 };
+const SCREEN = { y: 512, w: 124, h: 221, xs: [325, 452, 579, 706, 833] };
 ---
 
 <BaseLayout title={title} description={overview[0]}>
   <div class="canvas-wrap">
-    <main class="canvas" style="--canvas-height: 1075">
+    <main class="canvas" style="--canvas-height: 805">
       <a class="back" href={withBase('/')} style={at(44, 16, 23, 50)}>
         <img src={backIcon.src} alt="" width="18" height="18" />
         <span class="visually-hidden">Back to home</span>
       </a>
+
+      <TopNav />
 
       <h1 class="t-name" style={at(67, 66, 511)}>{title}</h1>
       <p class="t-meta" style={at(67, 102, 435)}>
@@ -68,18 +74,21 @@ const SCREEN = { y: 511, w: 163, h: 290, xs: [67, 248, 430, 612, 794] };
         </p>
       ))}
 
-      <!-- Gameplay screens -->
+      <!-- Social video and gameplay screens -->
+      <VideoPlayer src="sauce-n-dunk/social.mp4" label="Sauce N' Dunk social video" style={at(VIDEO.x, VIDEO.y, VIDEO.w, VIDEO.h)} />
       {screens.map((screen, i) => (
         <Image
           class="screen"
           src={screen}
           alt={`Sauce N' Dunk gameplay screen ${i + 1}`}
-          width={652}
-          widths={[163, 326, 489, 652]}
+          width={496}
+          widths={[124, 248, 372, 496]}
           sizes={vw(SCREEN.w)}
           style={at(SCREEN.xs[i], SCREEN.y, SCREEN.w, SCREEN.h)}
         />
       ))}
+
+      <footer class="t-copyright" style={at(325, 782, 435)}>{site.copyright}</footer>
     </main>
   </div>
 </BaseLayout>

@@ -10,6 +10,7 @@ import shutoutSuperstars from '../assets/work/shutout-superstars.png';
 export const site = {
   name: 'Carmen Yuen',
   title: 'Carmen Yuen - Artist',
+  copyright: '©2027 CARMEN YUEN',
   description: 'Carmen Yuen is a multidisciplinary designer and artist in Toronto.',
   nav: ['Home', 'Gallery', 'About'],
   links: {

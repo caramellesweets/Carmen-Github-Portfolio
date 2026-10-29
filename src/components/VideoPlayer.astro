@@ -1,0 +1,126 @@
+---
+// A muted, looping video on a black box with a play/pause button over it.
+// It loads and starts playing once it is about to scroll into view.
+import { withBase } from '../utils/url';
+
+interface Props {
+  // Path to the video inside public/.
+  src: string;
+  // What the video is, for screen readers, e.g. "Ultra Striker 2026 social video".
+  label: string;
+  style: string;
+}
+
+const { src, label, style } = Astro.props;
+---
+
+<div class="video-wrap" style={style}>
+  <video data-src={withBase(src)} aria-label={label} muted loop playsinline preload="none"></video>
+  <button class="video-toggle" type="button" aria-label={`Play the ${label}`}>
+    <span class="video-icon" aria-hidden="true">
+      <svg class="icon-play" viewBox="0 0 24 24"><path d="M8 5.5v13l11-6.5z" /></svg>
+      <svg class="icon-pause" viewBox="0 0 24 24"><path d="M7 5h3.5v14H7zM13.5 5H17v14h-3.5z" /></svg>
+    </span>
+  </button>
+</div>
+
+<script>
+  const load = (video: HTMLVideoElement) => {
+    if (!video.getAttribute('src')) video.src = video.dataset.src!;
+  };
+
+  // Load and start each video only once it is about to scroll into view.
+  const observer = new IntersectionObserver(
+    (entries) => {
+      for (const entry of entries) {
+        if (!entry.isIntersecting) continue;
+        const video = entry.target as HTMLVideoElement;
+        load(video);
+        video.play().catch(() => {});
+        observer.unobserve(video);
+      }
+    },
+    { rootMargin: '300px' },
+  );
+
+  // The overlay button plays or pauses its video and shows the matching icon.
+  document.querySelectorAll<HTMLElement>('.video-wrap').forEach((wrap) => {
+    const video = wrap.querySelector('video')!;
+    const button = wrap.querySelector('button')!;
+    const label = video.getAttribute('aria-label');
+    const sync = () => {
+      wrap.classList.toggle('is-playing', !video.paused);
+      button.setAttribute('aria-label', `${video.paused ? 'Play' : 'Pause'} the ${label}`);
+    };
+    video.addEventListener('play', sync);
+    video.addEventListener('pause', sync);
+    button.addEventListener('click', () => {
+      observer.unobserve(video);
+      load(video);
+      if (video.paused) video.play().catch(() => {});
+      else video.pause();
+    });
+    observer.observe(video);
+  });
+</script>
+
+<style>
+  .video-wrap {
+    background: #000;
+  }
+
+  .video-wrap video {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+  }
+
+  .video-toggle {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    border: 0;
+    background: none;
+    cursor: pointer;
+  }
+
+  .video-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: calc(36 * var(--u));
+    height: calc(36 * var(--u));
+    border-radius: 50%;
+    background: rgba(0, 0, 0, 0.45);
+    transition: opacity 0.2s;
+  }
+
+  .video-icon svg {
+    width: 55%;
+    height: 55%;
+    fill: rgba(255, 255, 255, 0.9);
+  }
+
+  .icon-pause,
+  .is-playing .icon-play {
+    display: none;
+  }
+
+  .is-playing .icon-pause {
+    display: block;
+  }
+
+  /* While playing, the button only shows on hover or keyboard focus. */
+  .is-playing .video-icon {
+    opacity: 0;
+  }
+
+  .is-playing .video-toggle:hover .video-icon,
+  .is-playing .video-toggle:focus-visible .video-icon {
+    opacity: 1;
+  }
+</style>

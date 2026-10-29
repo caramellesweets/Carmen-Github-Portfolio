@@ -2,6 +2,8 @@
 import { Image } from 'astro:assets';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import TopNav from '../components/TopNav.astro';
+import VideoPlayer from '../components/VideoPlayer.astro';
+import { site } from '../data/site';
 import { at, vw } from '../utils/canvas';
 import { withBase } from '../utils/url';
 import backIcon from '../assets/work/icon-back.png';
@@ -86,22 +88,7 @@ const rows = [
       <!-- Gameplay screens -->
       {rows.map((row) => (
         <>
-          <div class="video-wrap" style={at(VIDEO.x, row.y, VIDEO.w, VIDEO.h)}>
-            <video
-              data-src={withBase(row.video)}
-              aria-label={`Ultra Striker ${row.year} social video`}
-              muted
-              loop
-              playsinline
-              preload="none"
-            ></video>
-            <button class="video-toggle" type="button" aria-label={`Play the ${row.year} video`}>
-              <span class="video-icon" aria-hidden="true">
-                <svg class="icon-play" viewBox="0 0 24 24"><path d="M8 5.5v13l11-6.5z" /></svg>
-                <svg class="icon-pause" viewBox="0 0 24 24"><path d="M7 5h3.5v14H7zM13.5 5H17v14h-3.5z" /></svg>
-              </span>
-            </button>
-          </div>
+          <VideoPlayer src={row.video} label={`Ultra Striker ${row.year} social video`} style={at(VIDEO.x, row.y, VIDEO.w, VIDEO.h)} />
           <h3 class="t-year" style={at(row.labelX, row.labelY, 435)}>{row.year}</h3>
           {row.screens.map((screen, i) => (
             <Image
@@ -117,50 +104,10 @@ const rows = [
         </>
       ))}
 
-      <footer class="copyright" style={at(325, 1094, 435)}>©2027 CARMEN YUEN</footer>
+      <footer class="t-copyright" style={at(325, 1094, 435)}>{site.copyright}</footer>
     </main>
   </div>
 </BaseLayout>
-
-<script>
-  const load = (video: HTMLVideoElement) => {
-    if (!video.getAttribute('src')) video.src = video.dataset.src!;
-  };
-
-  // Load and start each video only once it is about to scroll into view.
-  const observer = new IntersectionObserver(
-    (entries) => {
-      for (const entry of entries) {
-        if (!entry.isIntersecting) continue;
-        const video = entry.target as HTMLVideoElement;
-        load(video);
-        video.play().catch(() => {});
-        observer.unobserve(video);
-      }
-    },
-    { rootMargin: '300px' },
-  );
-
-  // The overlay button plays or pauses its video and shows the matching icon.
-  document.querySelectorAll<HTMLElement>('.video-wrap').forEach((wrap) => {
-    const video = wrap.querySelector('video')!;
-    const button = wrap.querySelector('button')!;
-    const year = video.getAttribute('aria-label')!.match(/\d{4}/)![0];
-    const sync = () => {
-      wrap.classList.toggle('is-playing', !video.paused);
-      button.setAttribute('aria-label', `${video.paused ? 'Play' : 'Pause'} the ${year} video`);
-    };
-    video.addEventListener('play', sync);
-    video.addEventListener('pause', sync);
-    button.addEventListener('click', () => {
-      observer.unobserve(video);
-      load(video);
-      if (video.paused) video.play().catch(() => {});
-      else video.pause();
-    });
-    observer.observe(video);
-  });
-</script>
 
 <style>
   .back {
@@ -217,15 +164,6 @@ const rows = [
     text-align: center;
   }
 
-  .copyright {
-    font-size: calc(8 * var(--u));
-    line-height: calc(11 * var(--u));
-    font-weight: 387;
-    letter-spacing: calc(-0.3 * var(--u));
-    color: #868686;
-    text-align: center;
-  }
-
   .banner-bg {
     background: var(--hero);
     border-radius: calc(20 * var(--u));
@@ -238,64 +176,5 @@ const rows = [
 
   .screen {
     object-fit: cover;
-  }
-
-  .video-wrap {
-    background: #000;
-  }
-
-  .video-wrap video {
-    display: block;
-    width: 100%;
-    height: 100%;
-    object-fit: contain;
-  }
-
-  .video-toggle {
-    position: absolute;
-    inset: 0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 0;
-    border: 0;
-    background: none;
-    cursor: pointer;
-  }
-
-  .video-icon {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: calc(36 * var(--u));
-    height: calc(36 * var(--u));
-    border-radius: 50%;
-    background: rgba(0, 0, 0, 0.45);
-    transition: opacity 0.2s;
-  }
-
-  .video-icon svg {
-    width: 55%;
-    height: 55%;
-    fill: rgba(255, 255, 255, 0.9);
-  }
-
-  .icon-pause,
-  .is-playing .icon-play {
-    display: none;
-  }
-
-  .is-playing .icon-pause {
-    display: block;
-  }
-
-  /* While playing, the button only shows on hover or keyboard focus. */
-  .is-playing .video-icon {
-    opacity: 0;
-  }
-
-  .is-playing .video-toggle:hover .video-icon,
-  .is-playing .video-toggle:focus-visible .video-icon {
-    opacity: 1;
   }
 </style>
