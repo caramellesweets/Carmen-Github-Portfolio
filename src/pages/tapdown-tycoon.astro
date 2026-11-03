@@ -1,0 +1,154 @@
+---
+import { Image } from 'astro:assets';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import BackLink from '../components/BackLink.astro';
+import TopNav from '../components/TopNav.astro';
+import VideoPlayer from '../components/VideoPlayer.astro';
+import { site } from '../data/site';
+import { at, vw } from '../utils/canvas';
+import banner from '../assets/tapdown-tycoon/banner.jpg';
+import screen2026a from '../assets/tapdown-tycoon/screen-2026-1.jpg';
+import screen2026b from '../assets/tapdown-tycoon/screen-2026-2.png';
+import screen2026c from '../assets/tapdown-tycoon/screen-2026-3.jpg';
+import screen2026d from '../assets/tapdown-tycoon/screen-2026-4.jpg';
+import screen2026e from '../assets/tapdown-tycoon/screen-2026-5.jpg';
+import screen2025a from '../assets/tapdown-tycoon/screen-2025-1.png';
+import screen2025b from '../assets/tapdown-tycoon/screen-2025-2.png';
+import screen2025c from '../assets/tapdown-tycoon/screen-2025-3.png';
+import screen2025d from '../assets/tapdown-tycoon/screen-2025-4.png';
+import screen2025e from '../assets/tapdown-tycoon/screen-2025-5.png';
+
+const title = 'Tapdown Tycoon';
+const clients = 'Toronto Argonauts & Coinbase';
+
+const overview = [
+  'Tapdown Tycoon is a cookie-clicker x management simulation inspired game where players build and manager their own stadium! Players earn coins through tapping, upgrading buildings and staff to expand their empire!',
+  'Coinbase was looking for a game concept that aligns with their brand while raising cryptocurrency awareness amongst audience interested in exploring it. We proposed a clicker x tycoon game that combined coin-earning mechanics with resource management to showcase themes of growth, investment and expansion.',
+  'After the success of the first run in 2025, Coinbase returned for another year, looking for new ways to re-engage new and returning players. We expanded the gameplay to include a new mini-game, in-game market and challenge based tasks.',
+  'I was an artist and designer in this project. I developed visual concepts, game assets, UI and marketing materials.',
+];
+const OVERVIEW_Y = [397, 429, 475, 506];
+
+const details = [
+  { label: 'Role', value: 'Artist & Designer, Visual Production, Marketing Materials', y: 397 },
+  { label: 'Tools', value: 'Figma, After Effects', y: 413 },
+  { label: 'Team', value: 'Danny Tran, Ruqian Da, Nic Bradford, Daniel Houseley, Eric Dickinson', y: 429 },
+  { label: 'Year', value: '2025, 2026', y: 446 },
+];
+
+// Each year's social video and gameplay screens, with the year label centred above the screens.
+const VIDEO = { x: 67, w: 235, h: 221 };
+const SCREEN = { xs: [319, 447, 574, 704, 833], ws: [122, 122, 125, 124, 124] };
+const rows = [
+  { year: '2026', labelY: 529, y: 545, h: [221, 221, 221, 221, 221], video: 'tapdown-tycoon/social-1.mp4', screens: [screen2026a, screen2026b, screen2026c, screen2026d, screen2026e] },
+  { year: '2025', labelY: 787, y: 803, h: [222, 221, 221, 221, 221], video: 'tapdown-tycoon/social-2.mp4', screens: [screen2025a, screen2025b, screen2025c, screen2025d, screen2025e] },
+];
+---
+
+<BaseLayout title={title} description={overview[0]}>
+  <div class="canvas-wrap">
+    <main class="canvas" style="--canvas-height: 1073">
+      <BackLink />
+
+      <TopNav />
+
+      <h1 class="t-name" style={at(67, 66, 511)}>{title}</h1>
+      <p class="t-meta" style={at(67, 102, 435)}>
+        <strong class="label">Clients:</strong> <span class="value-wide">{clients}</span>
+      </p>
+
+      <!-- Banner -->
+      <div class="banner-bg" aria-hidden="true" style={at(67, 143, 890, 204)}></div>
+      <Image
+        class="banner"
+        src={banner}
+        alt="Tapdown Tycoon key art for the Toronto Argonauts and Coinbase, with a stadium built around a Coinbase coin"
+        width={1780}
+        widths={[890, 1780, 2670]}
+        sizes={vw(890)}
+        loading="eager"
+        style={at(67, 143, 890, 204)}
+      />
+
+      <!-- Overview -->
+      <h2 class="t-heading" style={at(67, 370, 480)}>Overview:</h2>
+      {overview.map((text, i) => (
+        <p class="t-body" style={at(67, OVERVIEW_Y[i], 435)}>{text}</p>
+      ))}
+
+      {details.map((item) => (
+        <p class="t-meta" style={at(659, item.y, 435)}>
+          <strong class="label">{item.label}:</strong> {item.value}
+        </p>
+      ))}
+
+      <!-- Social videos and gameplay screens -->
+      {rows.map((row) => (
+        <>
+          <VideoPlayer src={row.video} label={`Tapdown Tycoon ${row.year} social video`} style={at(VIDEO.x, row.y, VIDEO.w, VIDEO.h)} />
+          <h3 class="t-year" style={at(290, row.labelY, 435)}>{row.year}</h3>
+          {row.screens.map((screen, i) => (
+            <Image
+              class="screen"
+              src={screen}
+              alt={`Tapdown Tycoon ${row.year} gameplay screen ${i + 1}`}
+              width={500}
+              widths={[125, 250, 375, 500]}
+              sizes={vw(SCREEN.ws[i])}
+              style={at(SCREEN.xs[i], row.y, SCREEN.ws[i], row.h[i])}
+            />
+          ))}
+        </>
+      ))}
+
+      <footer class="t-copyright" style={at(302, 1048, 435)}>{site.copyright}</footer>
+    </main>
+  </div>
+</BaseLayout>
+
+<style>
+  .t-meta {
+    font-size: calc(8 * var(--u));
+    line-height: calc(16 * var(--u));
+    font-weight: 387;
+    letter-spacing: calc(-0.1 * var(--u));
+    white-space: nowrap;
+  }
+
+  .t-meta .label {
+    font-weight: 632;
+  }
+
+  .t-meta .value-wide {
+    letter-spacing: calc(-0.2 * var(--u));
+  }
+
+  .t-body {
+    font-size: calc(8 * var(--u));
+    line-height: calc(11 * var(--u));
+    font-weight: 387;
+    letter-spacing: calc(-0.3 * var(--u));
+  }
+
+  .t-year {
+    font-size: calc(8 * var(--u));
+    line-height: calc(16 * var(--u));
+    font-weight: 632;
+    letter-spacing: calc(-0.3 * var(--u));
+    text-align: center;
+  }
+
+  .banner-bg {
+    background: var(--hero);
+    border-radius: calc(20 * var(--u));
+  }
+
+  .banner {
+    object-fit: cover;
+    border-radius: calc(20 * var(--u));
+  }
+
+  .screen {
+    object-fit: cover;
+  }
+</style>

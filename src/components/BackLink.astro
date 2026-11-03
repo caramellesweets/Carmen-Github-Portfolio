@@ -1,0 +1,32 @@
+---
+// The back arrow at the top left of each case study page.
+import { at } from '../utils/canvas';
+import { withBase } from '../utils/url';
+import backIcon from '../assets/work/icon-back.png';
+---
+
+<a class="back" href={withBase('/')} style={at(44, 16, 23, 50)}>
+  <img src={backIcon.src} alt="" width="18" height="18" />
+  <span class="visually-hidden">Back to home</span>
+</a>
+
+<style>
+  .back {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: calc(5 * var(--u));
+    transform: scaleX(-1);
+    transition: background-color 0.15s;
+  }
+
+  .back img {
+    width: calc(18 * var(--u));
+    height: calc(18 * var(--u));
+    object-fit: contain;
+  }
+
+  .back:hover {
+    background-color: var(--hero);
+  }
+</style>

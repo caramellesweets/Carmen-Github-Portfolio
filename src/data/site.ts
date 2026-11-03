@@ -50,7 +50,7 @@ export type Project = {
 export const projects: Project[] = [
   { title: "Raptors x Hellmann's: Sauce N' Dunk", image: sauceNDunk, href: '/sauce-n-dunk/' },
   { title: 'TFC x LG: Ultra Striker', image: ultraStriker, href: '/ultra-striker/' },
-  { title: 'Argos x Coinbase: Tapdown Tycoon', image: tapdownTycoon },
+  { title: 'Argos x Coinbase: Tapdown Tycoon', image: tapdownTycoon, href: '/tapdown-tycoon/' },
   { title: 'Raptors x Bell: Crowd Connect', image: crowdConnect, position: '28.6% 50%' },
   { title: 'MLSE ARCADE x Tradable Bits', image: homeIceAdvantage },
   { title: 'Toronto Maple Leafs x OLG: Home Ice Advantage', image: homeIceAdvantage },
