@@ -9,9 +9,11 @@ interface Props {
   // What the video is, for screen readers, e.g. "Ultra Striker 2026 social video".
   label: string;
   style: string;
+  // Adds a sound button with a volume slider (bottom left) and a fullscreen button (bottom right).
+  controls?: boolean;
 }
 
-const { src, label, style } = Astro.props;
+const { src, label, style, controls = false } = Astro.props;
 ---
 
 <div class="video-wrap" style={style}>
@@ -22,6 +24,21 @@ const { src, label, style } = Astro.props;
       <svg class="icon-pause" viewBox="0 0 24 24"><path d="M7 5h3.5v14H7zM13.5 5H17v14h-3.5z" /></svg>
     </span>
   </button>
+  {controls && (
+    <>
+      <div class="video-sound">
+        <button class="video-control video-mute" type="button" aria-label="Turn sound on">
+          <svg class="icon-sound-on" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9.5v5h3.5L12 19V5L7.5 9.5zM14.5 8.2v7.6a4.2 4.2 0 0 0 0-7.6zM14.5 4.6v2a6 6 0 0 1 0 10.8v2a8 8 0 0 0 0-14.8z" /></svg>
+          <svg class="icon-sound-off" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9.5v5h3.5L12 19V5L7.5 9.5zM20.5 9.4 19.1 8l-2.3 2.3L14.5 8l-1.4 1.4 2.3 2.3-2.3 2.3 1.4 1.4 2.3-2.3 2.3 2.3 1.4-1.4-2.3-2.3z" /></svg>
+        </button>
+        <input class="video-volume" type="range" min="0" max="1" step="0.05" value="0" aria-label="Volume" />
+      </div>
+      <button class="video-control video-fullscreen" type="button" aria-label="Enter fullscreen">
+        <svg class="icon-expand" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 4h6v2.2H6.2V10H4zM14 4h6v6h-2.2V6.2H14zM4 14h2.2v3.8H10V20H4zM17.8 14H20v6h-6v-2.2h3.8z" /></svg>
+        <svg class="icon-collapse" viewBox="0 0 24 24" aria-hidden="true"><path d="M7.8 4H10v6H4V7.8h3.8zM14 4h2.2v3.8H20V10h-6zM4 14h6v6H7.8v-3.8H4zM14 14h6v2.2h-3.8V20H14z" /></svg>
+      </button>
+    </>
+  )}
 </div>
 
 <script>
@@ -61,11 +78,50 @@ const { src, label, style } = Astro.props;
       else video.pause();
     });
     observer.observe(video);
+
+    // Sound button and volume slider. Videos start muted because browsers block autoplay with sound.
+    const mute = wrap.querySelector<HTMLButtonElement>('.video-mute');
+    const volume = wrap.querySelector<HTMLInputElement>('.video-volume');
+    if (mute && volume) {
+      const syncSound = () => {
+        const silent = video.muted || video.volume === 0;
+        wrap.classList.toggle('is-muted', silent);
+        mute.setAttribute('aria-label', silent ? 'Turn sound on' : 'Turn sound off');
+        volume.value = silent ? '0' : String(video.volume);
+      };
+      video.addEventListener('volumechange', syncSound);
+      mute.addEventListener('click', () => {
+        if (video.volume === 0) video.volume = 1;
+        video.muted = !video.muted;
+      });
+      volume.addEventListener('input', () => {
+        video.volume = Number(volume.value);
+        video.muted = video.volume === 0;
+      });
+      syncSound();
+    }
+
+    // Fullscreen button. iPhones can only fullscreen the video itself, using their own player.
+    const fullscreen = wrap.querySelector<HTMLButtonElement>('.video-fullscreen');
+    if (fullscreen) {
+      document.addEventListener('fullscreenchange', () => {
+        const active = document.fullscreenElement === wrap;
+        wrap.classList.toggle('is-fullscreen', active);
+        fullscreen.setAttribute('aria-label', active ? 'Exit fullscreen' : 'Enter fullscreen');
+      });
+      fullscreen.addEventListener('click', () => {
+        if (document.fullscreenElement) document.exitFullscreen();
+        else if (wrap.requestFullscreen) wrap.requestFullscreen();
+        else (video as HTMLVideoElement & { webkitEnterFullscreen?: () => void }).webkitEnterFullscreen?.();
+      });
+    }
   });
 </script>
 
 <style>
   .video-wrap {
+    --control: max(24px, calc(22 * var(--u)));
+    --control-gap: calc(8 * var(--u));
     background: #000;
   }
 
@@ -114,13 +170,108 @@ const { src, label, style } = Astro.props;
     display: block;
   }
 
-  /* While playing, the button only shows on hover or keyboard focus. */
-  .is-playing .video-icon {
+  .video-sound,
+  .video-fullscreen {
+    position: absolute;
+    bottom: var(--control-gap);
+    border-radius: var(--control);
+    background: rgba(0, 0, 0, 0.45);
+    transition: opacity 0.2s;
+  }
+
+  .video-sound {
+    left: var(--control-gap);
+    display: flex;
+    align-items: center;
+  }
+
+  .video-fullscreen {
+    right: var(--control-gap);
+  }
+
+  .video-control {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: var(--control);
+    height: var(--control);
+    padding: 0;
+    border: 0;
+    border-radius: 50%;
+    cursor: pointer;
+  }
+
+  .video-mute {
+    background: none;
+  }
+
+  .video-control svg {
+    width: 65%;
+    height: 65%;
+    fill: rgba(255, 255, 255, 0.9);
+  }
+
+  .icon-sound-off,
+  .is-muted .icon-sound-on,
+  .icon-collapse,
+  .is-fullscreen .icon-expand {
+    display: none;
+  }
+
+  .is-muted .icon-sound-off,
+  .is-fullscreen .icon-collapse {
+    display: block;
+  }
+
+  /* The volume slider opens out from the sound button on hover or keyboard focus. */
+  .video-volume {
+    width: 0;
+    margin: 0;
+    opacity: 0;
+    accent-color: #fff;
+    cursor: pointer;
+    transition: width 0.2s, margin 0.2s, opacity 0.2s;
+  }
+
+  .video-sound:hover .video-volume,
+  .video-sound:has(:focus-visible) .video-volume {
+    width: calc(var(--control) * 2.5);
+    margin-right: calc(var(--control) / 3);
+    opacity: 1;
+  }
+
+  /* Fullscreen is not scaled to the page, so the controls use fixed sizes there. */
+  .video-wrap:fullscreen {
+    --control: 40px;
+    --control-gap: 20px;
+  }
+
+  .video-wrap:fullscreen .video-icon {
+    width: 72px;
+    height: 72px;
+  }
+
+  /* While playing, the buttons only show on hover or keyboard focus. */
+  .is-playing .video-icon,
+  .is-playing .video-sound,
+  .is-playing .video-fullscreen {
     opacity: 0;
   }
 
-  .is-playing .video-toggle:hover .video-icon,
-  .is-playing .video-toggle:focus-visible .video-icon {
+  .is-playing:hover .video-icon,
+  .is-playing .video-toggle:focus-visible .video-icon,
+  .is-playing:hover .video-sound,
+  .is-playing .video-sound:has(:focus-visible),
+  .is-playing:hover .video-fullscreen,
+  .is-playing .video-fullscreen:focus-visible {
     opacity: 1;
+  }
+
+  /* Touch screens have no hover, so the sound and fullscreen buttons stay visible. */
+  @media (hover: none) {
+    .is-playing .video-sound,
+    .is-playing .video-fullscreen {
+      opacity: 1;
+    }
   }
 </style>

@@ -1,0 +1,169 @@
+---
+import { Image } from 'astro:assets';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import BackLink from '../components/BackLink.astro';
+import TopNav from '../components/TopNav.astro';
+import VideoPlayer from '../components/VideoPlayer.astro';
+import { site } from '../data/site';
+import { at, vw } from '../utils/canvas';
+import { withBase } from '../utils/url';
+import banner from '../assets/crowd-connect/banner.png';
+import screen1 from '../assets/crowd-connect/screen-1.png';
+import screen2 from '../assets/crowd-connect/screen-2.png';
+import screen3 from '../assets/crowd-connect/screen-3.png';
+import screen4 from '../assets/crowd-connect/screen-4.png';
+import screen5 from '../assets/crowd-connect/screen-5.png';
+import gallery1 from '../assets/crowd-connect/gallery-1.png';
+import gallery2 from '../assets/crowd-connect/gallery-2.png';
+
+const title = 'Crowd Connect';
+const clients = 'Toronto Raptors & Bell';
+
+const overview = [
+  "Crowd Connect is a real-time, In-Arena showdown game where the audience in the arena are divided into two opposing teams for a face off in a tug-of-war style battle. Using their mobile devices, players tap as fast as possible to ensure their team's raptor pulls the wire to their phones to stay connected!",
+  'Bell was looking for a way to create a high-energy, interactive experience to showcase its brand during the short home-game intermissions. It was a 2-3 minute experience that encouraged fans to connect with everyone else in the arena through their mobile devices.',
+  'I was an artist and designer in this project. I developed visual concepts, game assets, UI and marketing materials.',
+];
+const OVERVIEW_Y = [397, 445, 496];
+
+const details = [
+  { label: 'Role', value: 'Artist & Designer, Visual Production, Marketing Materials', y: 397 },
+  { label: 'Tools', value: 'Figma, After Effects, Photoshop', y: 413 },
+  { label: 'Team', value: 'Danny Tran, Ruqian Da, Nic Bradford, Eric Dickinson', y: 429 },
+  { label: 'Year', value: '2026', y: 446 },
+];
+
+const screens = [screen1, screen2, screen3, screen4, screen5];
+const SCREEN = { y: 836.5, w: 122, h: 221, xs: [325, 453, 580, 707, 834] };
+---
+
+<BaseLayout title={title} description={overview[0]}>
+  <div class="canvas-wrap">
+    <main class="canvas" style="--canvas-height: 1372">
+      <BackLink />
+
+      <TopNav />
+
+      <h1 class="t-name" style={at(67, 66, 511)}>{title}</h1>
+      <p class="t-meta" style={at(67, 102, 435)}>
+        <strong class="label">Clients:</strong> <span class="value-wide">{clients}</span>
+      </p>
+
+      <!-- Banner -->
+      <div class="banner-bg" aria-hidden="true" style={at(67, 143, 890, 204)}></div>
+      <Image
+        class="banner"
+        src={banner}
+        alt="Crowd Connect key art for the Toronto Raptors and Bell, with two Raptor mascots flexing"
+        width={1780}
+        widths={[890, 1780, 2670]}
+        sizes={vw(890)}
+        loading="eager"
+        style={at(67, 143, 890, 204)}
+      />
+
+      <!-- Overview -->
+      <h2 class="t-heading" style={at(67, 370, 480)}>Overview:</h2>
+      {overview.map((text, i) => (
+        <p class="t-body" style={at(67, OVERVIEW_Y[i], 435)}>{text}</p>
+      ))}
+
+      {details.map((item) => (
+        <p class="t-meta" style={at(659, item.y, 435)}>
+          <strong class="label">{item.label}:</strong> {item.value}
+        </p>
+      ))}
+
+      <!-- In-arena video -->
+      <VideoPlayer src="crowd-connect/in-arena.mp4" label="Crowd Connect in-arena video" controls style={at(67, 528, 889, 278)} />
+
+      <!-- Title animation and phone screens -->
+      <img
+        class="title-animation"
+        src={withBase('crowd-connect/title-animation.gif')}
+        alt="Animated Crowd Connect title with the Raptors and Bell logos"
+        width="1080"
+        height="1080"
+        loading="lazy"
+        style={at(67, 825, 244, 244)}
+      />
+      {screens.map((screen, i) => (
+        <Image
+          class="screen"
+          src={screen}
+          alt={`Crowd Connect phone screen ${i + 1}`}
+          width={488}
+          widths={[122, 244, 366, 488]}
+          sizes={vw(SCREEN.w)}
+          style={at(SCREEN.xs[i], SCREEN.y, SCREEN.w, SCREEN.h)}
+        />
+      ))}
+
+      <!-- Game displays -->
+      <Image
+        class="screen"
+        src={gallery1}
+        alt="Crowd Connect court display with a timer, QR code and live cam of the Raptors"
+        width={834}
+        widths={[417, 834, 1251]}
+        sizes={vw(417)}
+        style={at(67, 1091, 417, 235)}
+      />
+      <Image
+        class="screen"
+        src={gallery2}
+        alt="Crowd Connect court display with two Raptors pulling wires toward giant phones"
+        width={908}
+        widths={[454, 908]}
+        sizes={vw(454)}
+        style={at(502, 1091, 454, 235)}
+      />
+
+      <footer class="t-copyright" style={at(294, 1351, 435)}>{site.copyright}</footer>
+    </main>
+  </div>
+</BaseLayout>
+
+<style>
+  .t-meta {
+    font-size: calc(8 * var(--u));
+    line-height: calc(16 * var(--u));
+    font-weight: 387;
+    letter-spacing: calc(-0.1 * var(--u));
+    white-space: nowrap;
+  }
+
+  .t-meta .label {
+    font-weight: 632;
+  }
+
+  .t-meta .value-wide {
+    letter-spacing: calc(-0.2 * var(--u));
+  }
+
+  .t-body {
+    font-size: calc(8 * var(--u));
+    line-height: calc(11 * var(--u));
+    font-weight: 387;
+    letter-spacing: calc(-0.3 * var(--u));
+  }
+
+  .banner-bg {
+    background: var(--hero);
+    border-radius: calc(20 * var(--u));
+  }
+
+  .banner {
+    object-fit: cover;
+    border-radius: calc(20 * var(--u));
+  }
+
+  .screen {
+    object-fit: cover;
+  }
+
+  .title-animation {
+    background: #000;
+    object-fit: cover;
+  }
+</style>
