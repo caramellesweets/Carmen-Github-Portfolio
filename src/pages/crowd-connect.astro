@@ -24,7 +24,7 @@ const overview = [
   'Bell was looking for a way to create a high-energy, interactive experience to showcase its brand during the short home-game intermissions. It was a 2-3 minute experience that encouraged fans to connect with everyone else in the arena through their mobile devices.',
   'I was an artist and designer in this project. I developed visual concepts, game assets, UI and marketing materials.',
 ];
-const OVERVIEW_Y = [397, 445, 496];
+const OVERVIEW_Y = [397, 445, 487];
 
 const details = [
   { label: 'Role', value: 'Artist & Designer, Visual Production, Marketing Materials', y: 397 },
@@ -34,12 +34,12 @@ const details = [
 ];
 
 const screens = [screen1, screen2, screen3, screen4, screen5];
-const SCREEN = { y: 836.5, w: 122, h: 221, xs: [325, 453, 580, 707, 834] };
+const SCREEN = { y: 821, w: 122, h: 221, xs: [298, 433, 567, 700, 834] };
 ---
 
 <BaseLayout title={title} description={overview[0]}>
   <div class="canvas-wrap">
-    <main class="canvas" style="--canvas-height: 1372">
+    <main class="canvas" style="--canvas-height: 1340">
       <BackLink />
 
       <TopNav />
@@ -85,7 +85,7 @@ const SCREEN = { y: 836.5, w: 122, h: 221, xs: [325, 453, 580, 707, 834] };
         width="1080"
         height="1080"
         loading="lazy"
-        style={at(67, 825, 244, 244)}
+        style={at(67, 821, 220, 220)}
       />
       {screens.map((screen, i) => (
         <Image
@@ -107,7 +107,7 @@ const SCREEN = { y: 836.5, w: 122, h: 221, xs: [325, 453, 580, 707, 834] };
         width={834}
         widths={[417, 834, 1251]}
         sizes={vw(417)}
-        style={at(67, 1091, 417, 235)}
+        style={at(67, 1056, 417, 235)}
       />
       <Image
         class="screen"
@@ -116,10 +116,10 @@ const SCREEN = { y: 836.5, w: 122, h: 221, xs: [325, 453, 580, 707, 834] };
         width={908}
         widths={[454, 908]}
         sizes={vw(454)}
-        style={at(502, 1091, 454, 235)}
+        style={at(502, 1056, 454, 235)}
       />
 
-      <footer class="t-copyright" style={at(294, 1351, 435)}>{site.copyright}</footer>
+      <footer class="t-copyright" style={at(294, 1316, 435)}>{site.copyright}</footer>
     </main>
   </div>
 </BaseLayout>

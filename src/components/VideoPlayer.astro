@@ -9,7 +9,7 @@ interface Props {
   // What the video is, for screen readers, e.g. "Ultra Striker 2026 social video".
   label: string;
   style: string;
-  // Adds a sound button with a volume slider (bottom left) and a fullscreen button (bottom right).
+  // Adds a bottom bar: sound button with volume slider, progress bar with times, fullscreen button.
   controls?: boolean;
 }
 
@@ -25,7 +25,7 @@ const { src, label, style, controls = false } = Astro.props;
     </span>
   </button>
   {controls && (
-    <>
+    <div class="video-bar">
       <div class="video-sound">
         <button class="video-control video-mute" type="button" aria-label="Turn sound on">
           <svg class="icon-sound-on" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9.5v5h3.5L12 19V5L7.5 9.5zM14.5 8.2v7.6a4.2 4.2 0 0 0 0-7.6zM14.5 4.6v2a6 6 0 0 1 0 10.8v2a8 8 0 0 0 0-14.8z" /></svg>
@@ -33,11 +33,15 @@ const { src, label, style, controls = false } = Astro.props;
         </button>
         <input class="video-volume" type="range" min="0" max="1" step="0.05" value="0" aria-label="Volume" />
       </div>
+      <div class="video-seek">
+        <input class="video-progress" type="range" min="0" max="0" step="1" value="0" aria-label="Video progress" />
+        <span class="video-time">0:00</span>
+      </div>
       <button class="video-control video-fullscreen" type="button" aria-label="Enter fullscreen">
         <svg class="icon-expand" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 4h6v2.2H6.2V10H4zM14 4h6v6h-2.2V6.2H14zM4 14h2.2v3.8H10V20H4zM17.8 14H20v6h-6v-2.2h3.8z" /></svg>
         <svg class="icon-collapse" viewBox="0 0 24 24" aria-hidden="true"><path d="M7.8 4H10v6H4V7.8h3.8zM14 4h2.2v3.8H20V10h-6zM4 14h6v6H7.8v-3.8H4zM14 14h6v2.2h-3.8V20H14z" /></svg>
       </button>
-    </>
+    </div>
   )}
 </div>
 
@@ -99,6 +103,39 @@ const { src, label, style, controls = false } = Astro.props;
         video.muted = video.volume === 0;
       });
       syncSound();
+    }
+
+    // Progress bar and times. Dragging it skips forward or back.
+    const progress = wrap.querySelector<HTMLInputElement>('.video-progress');
+    const time = wrap.querySelector<HTMLElement>('.video-time');
+    if (progress && time) {
+      const format = (seconds: number) =>
+        `${Math.floor(seconds / 60)}:${String(Math.floor(seconds % 60)).padStart(2, '0')}`;
+      let dragging = false;
+      const syncTime = () => {
+        if (!dragging) progress.value = String(video.currentTime);
+        const current = format(Number(progress.value));
+        const total = format(video.duration);
+        time.textContent = `${current} / ${total}`;
+        progress.setAttribute('aria-valuetext', `${current} of ${total}`);
+      };
+      video.addEventListener('loadedmetadata', () => {
+        progress.max = String(video.duration);
+        syncTime();
+      });
+      video.addEventListener('timeupdate', syncTime);
+      progress.addEventListener('input', () => {
+        video.currentTime = Number(progress.value);
+        syncTime();
+      });
+      progress.addEventListener('pointerdown', () => {
+        dragging = true;
+      });
+      for (const release of ['pointerup', 'pointercancel']) {
+        document.addEventListener(release, () => {
+          dragging = false;
+        });
+      }
     }
 
     // Fullscreen button. iPhones can only fullscreen the video itself, using their own player.
@@ -170,23 +207,58 @@ const { src, label, style, controls = false } = Astro.props;
     display: block;
   }
 
-  .video-sound,
-  .video-fullscreen {
+  /* Clicks on the gaps in the bar go through to the play/pause button underneath. */
+  .video-bar {
     position: absolute;
+    right: var(--control-gap);
     bottom: var(--control-gap);
+    left: var(--control-gap);
+    display: flex;
+    align-items: center;
+    gap: var(--control-gap);
+    pointer-events: none;
+  }
+
+  .video-sound,
+  .video-seek,
+  .video-fullscreen {
     border-radius: var(--control);
     background: rgba(0, 0, 0, 0.45);
+    pointer-events: auto;
     transition: opacity 0.2s;
   }
 
-  .video-sound {
-    left: var(--control-gap);
+  .video-sound,
+  .video-seek {
     display: flex;
     align-items: center;
   }
 
+  .video-seek {
+    flex: 1;
+    min-width: 0;
+    height: var(--control);
+    gap: calc(var(--control) / 3);
+    padding: 0 calc(var(--control) / 2);
+  }
+
+  .video-progress {
+    flex: 1;
+    min-width: 0;
+    margin: 0;
+    accent-color: #fff;
+    cursor: pointer;
+  }
+
+  .video-time {
+    color: rgba(255, 255, 255, 0.9);
+    font-size: calc(var(--control) * 0.45);
+    font-variant-numeric: tabular-nums;
+    white-space: nowrap;
+  }
+
   .video-fullscreen {
-    right: var(--control-gap);
+    flex: none;
   }
 
   .video-control {
@@ -254,6 +326,7 @@ const { src, label, style, controls = false } = Astro.props;
   /* While playing, the buttons only show on hover or keyboard focus. */
   .is-playing .video-icon,
   .is-playing .video-sound,
+  .is-playing .video-seek,
   .is-playing .video-fullscreen {
     opacity: 0;
   }
@@ -262,14 +335,17 @@ const { src, label, style, controls = false } = Astro.props;
   .is-playing .video-toggle:focus-visible .video-icon,
   .is-playing:hover .video-sound,
   .is-playing .video-sound:has(:focus-visible),
+  .is-playing:hover .video-seek,
+  .is-playing .video-seek:has(:focus-visible),
   .is-playing:hover .video-fullscreen,
   .is-playing .video-fullscreen:focus-visible {
     opacity: 1;
   }
 
-  /* Touch screens have no hover, so the sound and fullscreen buttons stay visible. */
+  /* Touch screens have no hover, so the bottom bar stays visible. */
   @media (hover: none) {
     .is-playing .video-sound,
+    .is-playing .video-seek,
     .is-playing .video-fullscreen {
       opacity: 1;
     }
