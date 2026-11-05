@@ -53,7 +53,7 @@ export const projects: Project[] = [
   { title: 'Argos x Coinbase: Tapdown Tycoon', image: tapdownTycoon, href: '/tapdown-tycoon/' },
   { title: 'Raptors x Bell: Crowd Connect', image: crowdConnect, position: '28.6% 50%', href: '/crowd-connect/' },
   { title: 'MLSE ARCADE x Tradable Bits', image: homeIceAdvantage },
-  { title: 'Toronto Maple Leafs x OLG: Home Ice Advantage', image: homeIceAdvantage },
+  { title: 'Toronto Maple Leafs x OLG: Home Ice Advantage', image: homeIceAdvantage, href: '/home-ice-advantage/' },
   { title: "Raptors x McDonald's: Beyond The Arch (2025)", image: homeIceAdvantage },
   { title: 'Lollapalooza: Legend of Lolla 2', image: shutoutSuperstars },
   { title: 'Toronto Maple Leafs x PointsBet: Shutout Superstars', image: shutoutSuperstars },

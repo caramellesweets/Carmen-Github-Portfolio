@@ -1,0 +1,146 @@
+---
+import { Image } from 'astro:assets';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import BackLink from '../components/BackLink.astro';
+import TopNav from '../components/TopNav.astro';
+import VideoPlayer from '../components/VideoPlayer.astro';
+import { site } from '../data/site';
+import { at, vw } from '../utils/canvas';
+import banner from '../assets/home-ice-advantage/banner.png';
+import screen1 from '../assets/home-ice-advantage/screen-1.png';
+import screen2 from '../assets/home-ice-advantage/screen-2.png';
+import screen3 from '../assets/home-ice-advantage/screen-3.png';
+import screen4 from '../assets/home-ice-advantage/screen-4.png';
+import screen5 from '../assets/home-ice-advantage/screen-5.png';
+
+const title = 'Home Ice Advantage';
+const clients = 'Toronto Maple Leafs & OLG';
+
+const overview = [
+  {
+    y: 397,
+    w: 445,
+    text: 'Home Ice Advantage was a curling-inspired skill game where players can control the aim and strength of pucks to land in designated scoring zones. Players must carefully time and aim each throw while navigating obstacles to maximize their score.',
+  },
+  {
+    y: 429,
+    w: 435,
+    text: 'OLG wanted a game to raise awareness of local communities and support charitable initiatives. In highlighting organizations dedicated to local causes, the goal was to encourage community involvement and inspire charitable donations through gamification.',
+  },
+  {
+    y: 471,
+    w: 445,
+    text: "To reinforce OLG's branding, their colors, tag-lines and shapes were utilized at a high level and acted as a form of celebratory feedback for when users scored high, providing an additional sense of accomplishment.",
+  },
+  {
+    y: 504,
+    w: 435,
+    text: 'My role as a designer for this project was lead artist. I developed visual concepts, game assets, UI and marketing materials.',
+  },
+];
+
+const details = [
+  { label: 'Role', value: 'Artist & Designer - Concept, Visual & Asset Production' },
+  { label: 'Tools', value: 'Figma, Illustrator, Photoshop' },
+  { label: 'Team', value: 'Becky Wu, Fahad Edwards, Nic Bradford, Daniel Houseley, Sandra Dimaano' },
+  { label: 'Year', value: '2025' },
+];
+
+const screens = [screen1, screen2, screen3, screen4, screen5];
+const SCREEN = { y: 537, w: 122, h: 221, xs: [325, 453, 580, 707, 834] };
+---
+
+<BaseLayout title={title} description={overview[0].text}>
+  <div class="canvas-wrap">
+    <main class="canvas" style="--canvas-height: 795">
+      <BackLink />
+
+      <TopNav />
+
+      <h1 class="t-name" style={at(67, 66, 511)}>{title}</h1>
+      <p class="t-meta" style={at(67, 102, 435)}>
+        <strong class="label">Clients:</strong> <span class="value-wide">{clients}</span>
+      </p>
+
+      <!-- Banner -->
+      <div class="banner-bg" aria-hidden="true" style={at(67, 143, 890, 204)}></div>
+      <Image
+        class="banner"
+        src={banner}
+        alt="Home Ice Advantage key art for the Toronto Maple Leafs and OLG, with the game logo on an ice rink"
+        width={1780}
+        widths={[890, 1780, 2670]}
+        sizes={vw(890)}
+        loading="eager"
+        style={at(67, 143, 890, 204)}
+      />
+
+      <!-- Overview -->
+      <h2 class="t-heading" style={at(67, 370, 480)}>Overview:</h2>
+      {overview.map((item) => (
+        <p class="t-body" style={at(67, item.y, item.w)}>{item.text}</p>
+      ))}
+
+      {details.map((item, i) => (
+        <p class="t-meta" style={at(659, 397 + i * 16, 435)}>
+          <strong class="label">{item.label}:</strong> {item.value}
+        </p>
+      ))}
+
+      <!-- Gameplay video and screens. The video has no audio track, so no sound button. -->
+      <VideoPlayer src="home-ice-advantage/gameplay.mp4" label="Home Ice Advantage gameplay video" controls sound={false} style={at(67, 537, 235, 221)} />
+      {screens.map((screen, i) => (
+        <Image
+          class="screen"
+          src={screen}
+          alt={`Home Ice Advantage gameplay screen ${i + 1}`}
+          width={488}
+          widths={[122, 244, 366, 488]}
+          sizes={vw(SCREEN.w)}
+          style={at(SCREEN.xs[i], SCREEN.y, SCREEN.w, SCREEN.h)}
+        />
+      ))}
+
+      <footer class="t-copyright" style={at(325, 774, 435)}>{site.copyright}</footer>
+    </main>
+  </div>
+</BaseLayout>
+
+<style>
+  .t-meta {
+    font-size: calc(8 * var(--u));
+    line-height: calc(16 * var(--u));
+    font-weight: 387;
+    letter-spacing: calc(-0.1 * var(--u));
+    white-space: nowrap;
+  }
+
+  .t-meta .label {
+    font-weight: 632;
+  }
+
+  .t-meta .value-wide {
+    letter-spacing: calc(-0.2 * var(--u));
+  }
+
+  .t-body {
+    font-size: calc(8 * var(--u));
+    line-height: calc(11 * var(--u));
+    font-weight: 387;
+    letter-spacing: calc(-0.3 * var(--u));
+  }
+
+  .banner-bg {
+    background: var(--hero);
+    border-radius: calc(20 * var(--u));
+  }
+
+  .banner {
+    object-fit: cover;
+    border-radius: calc(20 * var(--u));
+  }
+
+  .screen {
+    object-fit: cover;
+  }
+</style>

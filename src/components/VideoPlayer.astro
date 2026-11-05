@@ -11,9 +11,11 @@ interface Props {
   style: string;
   // Adds a bottom bar: sound button with volume slider, progress bar with times, fullscreen button.
   controls?: boolean;
+  // Set to false for a video with no audio track, to leave out the sound button.
+  sound?: boolean;
 }
 
-const { src, label, style, controls = false } = Astro.props;
+const { src, label, style, controls = false, sound = true } = Astro.props;
 ---
 
 <div class="video-wrap" style={style}>
@@ -26,13 +28,15 @@ const { src, label, style, controls = false } = Astro.props;
   </button>
   {controls && (
     <div class="video-bar">
-      <div class="video-sound">
-        <button class="video-control video-mute" type="button" aria-label="Turn sound on">
-          <svg class="icon-sound-on" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9.5v5h3.5L12 19V5L7.5 9.5zM14.5 8.2v7.6a4.2 4.2 0 0 0 0-7.6zM14.5 4.6v2a6 6 0 0 1 0 10.8v2a8 8 0 0 0 0-14.8z" /></svg>
-          <svg class="icon-sound-off" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9.5v5h3.5L12 19V5L7.5 9.5zM20.5 9.4 19.1 8l-2.3 2.3L14.5 8l-1.4 1.4 2.3 2.3-2.3 2.3 1.4 1.4 2.3-2.3 2.3 2.3 1.4-1.4-2.3-2.3z" /></svg>
-        </button>
-        <input class="video-volume" type="range" min="0" max="1" step="0.05" value="0" aria-label="Volume" />
-      </div>
+      {sound && (
+        <div class="video-sound">
+          <button class="video-control video-mute" type="button" aria-label="Turn sound on">
+            <svg class="icon-sound-on" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9.5v5h3.5L12 19V5L7.5 9.5zM14.5 8.2v7.6a4.2 4.2 0 0 0 0-7.6zM14.5 4.6v2a6 6 0 0 1 0 10.8v2a8 8 0 0 0 0-14.8z" /></svg>
+            <svg class="icon-sound-off" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9.5v5h3.5L12 19V5L7.5 9.5zM20.5 9.4 19.1 8l-2.3 2.3L14.5 8l-1.4 1.4 2.3 2.3-2.3 2.3 1.4 1.4 2.3-2.3 2.3 2.3 1.4-1.4-2.3-2.3z" /></svg>
+          </button>
+          <input class="video-volume" type="range" min="0" max="1" step="0.05" value="0" aria-label="Volume" />
+        </div>
+      )}
       <div class="video-seek">
         <input class="video-progress" type="range" min="0" max="0" step="1" value="0" aria-label="Video progress" />
         <span class="video-time">0:00</span>
@@ -136,6 +140,10 @@ const { src, label, style, controls = false } = Astro.props;
           dragging = false;
         });
       }
+      // A small player has no room for the bar and times, but they return in fullscreen.
+      new ResizeObserver(() => {
+        wrap.classList.toggle('is-small', wrap.clientWidth < 170);
+      }).observe(wrap);
     }
 
     // Fullscreen button. iPhones can only fullscreen the video itself, using their own player.
@@ -259,6 +267,11 @@ const { src, label, style, controls = false } = Astro.props;
 
   .video-fullscreen {
     flex: none;
+    margin-left: auto;
+  }
+
+  .is-small .video-seek {
+    display: none;
   }
 
   .video-control {
