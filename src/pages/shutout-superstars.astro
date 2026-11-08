@@ -1,0 +1,143 @@
+---
+import { Image } from 'astro:assets';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import BackLink from '../components/BackLink.astro';
+import TopNav from '../components/TopNav.astro';
+import VideoPlayer from '../components/VideoPlayer.astro';
+import { site } from '../data/site';
+import { at, vw } from '../utils/canvas';
+import banner from '../assets/shutout-superstars/banner.png';
+import screen1 from '../assets/shutout-superstars/screen-1.png';
+import screen2 from '../assets/shutout-superstars/screen-2.png';
+import screen3 from '../assets/shutout-superstars/screen-3.png';
+import screen4 from '../assets/shutout-superstars/screen-4.png';
+import screen5 from '../assets/shutout-superstars/screen-5.png';
+
+const title = 'Shutout Superstars';
+const clients = 'Toronto Maple Leafs & PointsBet';
+
+const overview = [
+  {
+    y: 397,
+    w: 445,
+    text: 'Shutout Superstars was a fast paced hockey goalie game where players move their goalie left and right to block incoming pucks. Players must react quickly to incoming shots while avoiding red-herring items such as snowballs to achieve the highest score.',
+  },
+  {
+    y: 429,
+    w: 435,
+    text: "This game was initially inspired by an existing game developed for another client, but required a different vibe and feel to make it more unique to the new client. The visual direction underwent several rounds of design exploration before reaching its final look with the sleek vector art style to match PointsBet's aesthetic.",
+  },
+];
+
+// The Team line breaks onto a second line where the original does ("\n").
+const details = [
+  { label: 'Role', value: 'Artist & Designer - Concept, Visual & Asset Production, Contest-Page', y: 397 },
+  { label: 'Tools', value: 'Figma, Illustrator, Clip Studio Paint', y: 413 },
+  { label: 'Team', value: 'Derrick Matthews, Ruqian Da, Chidozie Ikpe, Nic Bradford,\nDaniel Houseley, Eric Dickinson', y: 429, w: 298 },
+  { label: 'Year', value: '2024', y: 461 },
+];
+
+const screens = [screen1, screen2, screen3, screen4, screen5];
+const SCREEN = { y: 493, w: 122, h: 221, xs: [325, 453, 580, 707, 834] };
+---
+
+<BaseLayout title={title} description={overview[0].text}>
+  <div class="canvas-wrap">
+    <main class="canvas" style="--canvas-height: 782">
+      <BackLink />
+
+      <TopNav />
+
+      <h1 class="t-name" style={at(67, 66, 511)}>{title}</h1>
+      <p class="t-meta" style={at(67, 102, 435)}>
+        <strong class="label">Clients:</strong> <span class="value-wide">{clients}</span>
+      </p>
+
+      <!-- Banner -->
+      <div class="banner-bg" aria-hidden="true" style={at(67, 143, 890, 204)}></div>
+      <Image
+        class="banner"
+        src={banner}
+        alt="Shutout Superstars key art for the Toronto Maple Leafs and PointsBet, a neon game logo over a city skyline"
+        width={1780}
+        widths={[890, 1780, 2670]}
+        sizes={vw(890)}
+        loading="eager"
+        style={at(67, 143, 890, 204)}
+      />
+
+      <!-- Overview -->
+      <h2 class="t-heading" style={at(67, 370, 480)}>Overview:</h2>
+      {overview.map((item) => (
+        <p class="t-body" style={at(67, item.y, item.w)}>{item.text}</p>
+      ))}
+
+      {details.map((item) => (
+        <p class="t-meta" style={at(659, item.y, item.w ?? 435)}>
+          <strong class="label">{item.label}:</strong>{' '}
+          {item.value.split('\n').map((line, i) => (
+            <>
+              {i > 0 && <br />}
+              {line}
+            </>
+          ))}
+        </p>
+      ))}
+
+      <!-- Social video and gameplay screens -->
+      <VideoPlayer src="shutout-superstars/social.mp4" label="Shutout Superstars social video" controls style={at(67, 493, 235, 221)} />
+      {screens.map((screen, i) => (
+        <Image
+          class="screen"
+          src={screen}
+          alt={`Shutout Superstars gameplay screen ${i + 1}`}
+          width={488}
+          widths={[122, 244, 366, 488]}
+          sizes={vw(SCREEN.w)}
+          style={at(SCREEN.xs[i], SCREEN.y, SCREEN.w, SCREEN.h)}
+        />
+      ))}
+
+      <footer class="t-copyright" style={at(325, 747, 435)}>{site.copyright}</footer>
+    </main>
+  </div>
+</BaseLayout>
+
+<style>
+  .t-meta {
+    font-size: calc(8 * var(--u));
+    line-height: calc(16 * var(--u));
+    font-weight: 387;
+    letter-spacing: calc(-0.1 * var(--u));
+    white-space: nowrap;
+  }
+
+  .t-meta .label {
+    font-weight: 632;
+  }
+
+  .t-meta .value-wide {
+    letter-spacing: calc(-0.2 * var(--u));
+  }
+
+  .t-body {
+    font-size: calc(8 * var(--u));
+    line-height: calc(11 * var(--u));
+    font-weight: 387;
+    letter-spacing: calc(-0.3 * var(--u));
+  }
+
+  .banner-bg {
+    background: var(--hero);
+    border-radius: calc(20 * var(--u));
+  }
+
+  .banner {
+    object-fit: cover;
+    border-radius: calc(20 * var(--u));
+  }
+
+  .screen {
+    object-fit: cover;
+  }
+</style>

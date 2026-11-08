@@ -141,8 +141,10 @@ const { src, label, style, controls = false, sound = true } = Astro.props;
         });
       }
       // A small player has no room for the bar and times, but they return in fullscreen.
+      // The sound button takes up some of the room, so a player with one needs to be wider.
+      const minWidth = wrap.querySelector('.video-sound') ? 200 : 170;
       new ResizeObserver(() => {
-        wrap.classList.toggle('is-small', wrap.clientWidth < 170);
+        wrap.classList.toggle('is-small', wrap.clientWidth < minWidth);
       }).observe(wrap);
     }
 
@@ -245,6 +247,7 @@ const { src, label, style, controls = false, sound = true } = Astro.props;
   .video-seek {
     flex: 1;
     min-width: 0;
+    overflow: hidden;
     height: var(--control);
     gap: calc(var(--control) / 3);
     padding: 0 calc(var(--control) / 2);
@@ -320,7 +323,7 @@ const { src, label, style, controls = false, sound = true } = Astro.props;
 
   .video-sound:hover .video-volume,
   .video-sound:has(:focus-visible) .video-volume {
-    width: calc(var(--control) * 2.5);
+    width: calc(var(--control) * 2);
     margin-right: calc(var(--control) / 3);
     opacity: 1;
   }
