@@ -1,0 +1,233 @@
+---
+import { Image } from 'astro:assets';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import BackLink from '../components/BackLink.astro';
+import TopNav from '../components/TopNav.astro';
+import VideoPlayer from '../components/VideoPlayer.astro';
+import { site } from '../data/site';
+import { at, vw } from '../utils/canvas';
+import { withBase } from '../utils/url';
+import banner from '../assets/legend-of-lolla-2/banner.png';
+import screen1 from '../assets/legend-of-lolla-2/screen-1.png';
+import screen2 from '../assets/legend-of-lolla-2/screen-2.png';
+import screen3 from '../assets/legend-of-lolla-2/screen-3.png';
+import screen4 from '../assets/legend-of-lolla-2/screen-4.jpg';
+import screen5 from '../assets/legend-of-lolla-2/screen-5.png';
+import screen6 from '../assets/legend-of-lolla-2/screen-6.png';
+import screen7 from '../assets/legend-of-lolla-2/screen-7.png';
+import screen8 from '../assets/legend-of-lolla-2/screen-8.png';
+import square1 from '../assets/legend-of-lolla-2/square-1.png';
+import square2 from '../assets/legend-of-lolla-2/square-2.png';
+import square3 from '../assets/legend-of-lolla-2/square-3.png';
+import square4 from '../assets/legend-of-lolla-2/square-4.png';
+import square5 from '../assets/legend-of-lolla-2/square-5.png';
+import reddit1 from '../assets/legend-of-lolla-2/reddit-1.png';
+import reddit2 from '../assets/legend-of-lolla-2/reddit-2.png';
+import reddit3 from '../assets/legend-of-lolla-2/reddit-3.png';
+import reddit4 from '../assets/legend-of-lolla-2/reddit-4.png';
+import reddit5 from '../assets/legend-of-lolla-2/reddit-5.png';
+import reddit6 from '../assets/legend-of-lolla-2/reddit-6.png';
+
+const title = 'Legend of Lolla 2';
+const clients = 'MLSE ARCADE x Lollapalooza';
+
+const overview = [
+  {
+    y: 397,
+    w: 444,
+    text: 'Legend of Lolla 2 was a retro-inspired dance battle game where players battle opponents using dance moves as their attacks.',
+  },
+  {
+    y: 420,
+    w: 435,
+    text: "Inspired by classic Pokémon-style battle RPGs, the game featured unique characters and environments influenced by Chicago, the host city of that year's Lollapalooza festival.",
+  },
+  {
+    y: 450,
+    w: 435,
+    text: 'I collaborated with fellow artists and developers on the team as a character artist, animator, environment/concept designer, contributing to the development of a multitude of characters, game environments and animations.',
+  },
+];
+
+const details = [
+  { label: 'Role', value: 'Artist - Concept, Character, Environment, Animation' },
+  { label: 'Tools', value: 'Aesprite, Figma, Procreate' },
+  { label: 'Team', value: 'Nic Bradford, Daniel Houseley, Becky Wu' },
+  { label: 'Year', value: '2023' },
+];
+
+// Animated pixel-art characters on the grey strip beside the video (GIFs kept as-is so they animate).
+const sprites = [
+  { x: 330, w: 41 },
+  { x: 371, w: 41 },
+  { x: 453, w: 58 },
+  { x: 511, w: 41 },
+  { x: 593, w: 41 },
+  { x: 643, w: 41 },
+  { x: 731, w: 41 },
+  { x: 772, w: 41 },
+  { x: 838, w: 41 },
+  { x: 898, w: 41 },
+];
+
+const screens = [screen1, screen2, screen3, screen4, screen5, screen6, screen7, screen8];
+const SCREEN = { y: 574, w: 75, h: 133, xs: [311, 393, 474, 555, 637, 719, 800, 882] };
+
+const squares = [square1, square2, square3, square4, square5];
+const SQUARE = { y: 720, w: 175, h: 177, xs: [67, 246, 425, 603, 782] };
+
+const reddit = [
+  { image: reddit1, box: [83, 975, 206, 66], alt: 'Reddit comment: "This the Dark Souls of browser games"' },
+  { image: reddit2, box: [293, 975, 205, 66], alt: 'Reddit comment: "this game is actually fun"' },
+  { image: reddit3, box: [502, 975, 282, 66], alt: `Reddit comment: "I haven't gone to Lolla in years and I'm having fun"` },
+  { image: reddit4, box: [794, 976, 151, 189], alt: 'Reddit post with a phone screenshot of the game' },
+  { image: reddit5, box: [83, 1046, 327, 119], alt: 'Reddit thread of players comparing how many tries the Rat Pack battle took' },
+  { image: reddit6, box: [419, 1046, 365, 119], alt: 'Reddit comment: "this is MY march madness"' },
+];
+---
+
+<BaseLayout title={title} description={overview[0].text}>
+  <div class="canvas-wrap">
+    <main class="canvas" style="--canvas-height: 1284">
+      <BackLink />
+
+      <TopNav />
+
+      <h1 class="t-name" style={at(67, 66, 511)}>{title}</h1>
+      <p class="t-meta" style={at(67, 102, 435)}>
+        <strong class="label">Clients:</strong> <span class="value-wide">{clients}</span>
+      </p>
+
+      <!-- Banner -->
+      <div class="banner-bg" aria-hidden="true" style={at(67, 143, 890, 204)}></div>
+      <Image
+        class="banner"
+        src={banner}
+        alt="Legend of Lolla key art, the game logo on a dark starry background"
+        width={1780}
+        widths={[890, 1780, 2670]}
+        sizes={vw(890)}
+        loading="eager"
+        style={at(67, 143, 890, 204)}
+      />
+
+      <!-- Overview -->
+      <h2 class="t-heading" style={at(67, 370, 480)}>Overview:</h2>
+      {overview.map((item) => (
+        <p class="t-body" style={at(67, item.y, item.w)}>{item.text}</p>
+      ))}
+
+      {details.map((item, i) => (
+        <p class="t-meta" style={at(659, 397 + i * 16, 435)}>
+          <strong class="label">{item.label}:</strong> {item.value}
+        </p>
+      ))}
+
+      <!-- Battle video. The user asked for no sound on this one. -->
+      <VideoPlayer src="legend-of-lolla-2/battle.mp4" label="Legend of Lolla 2 battle video" controls sound={false} style={at(67, 486, 235, 221)} />
+
+      <!-- Character sprites -->
+      <div class="panel" aria-hidden="true" style={at(311, 486, 646, 75)}></div>
+      {sprites.map((sprite, i) => (
+        <img
+          class="cover"
+          src={withBase(`legend-of-lolla-2/sprite-${i + 1}.gif`)}
+          alt={`Animated pixel-art character ${i + 1}`}
+          loading="lazy"
+          style={at(sprite.x, 502, sprite.w, 41)}
+        />
+      ))}
+
+      <!-- Character cards -->
+      {screens.map((screen, i) => (
+        <Image
+          class="cover"
+          src={screen}
+          alt={`Legend of Lolla 2 character card ${i + 1}`}
+          width={300}
+          widths={[75, 150, 225, 300]}
+          sizes={vw(SCREEN.w)}
+          style={at(SCREEN.xs[i], SCREEN.y, SCREEN.w, SCREEN.h)}
+        />
+      ))}
+
+      <!-- Battle environments -->
+      {squares.map((square, i) => (
+        <Image
+          class="cover"
+          src={square}
+          alt={`Legend of Lolla 2 battle scene ${i + 1}`}
+          width={700}
+          widths={[175, 350, 525, 700]}
+          sizes={vw(SQUARE.w)}
+          style={at(SQUARE.xs[i], SQUARE.y, SQUARE.w, SQUARE.h)}
+        />
+      ))}
+
+      <!-- Fan reactions -->
+      <h2 class="t-meta label" style={at(67, 911, 435)}>Fan Thoughts &amp; Audience Engagement</h2>
+      <div class="panel" aria-hidden="true" style={at(67, 931, 893, 251)}></div>
+      <p class="t-body" style={at(83, 943, 862)}>
+        The game generated positive engagement amongst Reddit users, with viewers frequently replaying the game to follow<br />
+        the upcoming artist reveals in the Lollapalooza lineup and enjoying the interactive experience.
+      </p>
+      {reddit.map((item) => (
+        <Image
+          class="cover"
+          src={item.image}
+          alt={item.alt}
+          width={Math.min(item.box[2] * 2, item.image.width)}
+          sizes={vw(item.box[2])}
+          style={at(item.box[0], item.box[1], item.box[2], item.box[3])}
+        />
+      ))}
+
+      <footer class="t-copyright" style={at(290, 1261, 435)}>{site.copyright}</footer>
+    </main>
+  </div>
+</BaseLayout>
+
+<style>
+  .t-meta {
+    font-size: calc(8 * var(--u));
+    line-height: calc(16 * var(--u));
+    font-weight: 387;
+    letter-spacing: calc(-0.1 * var(--u));
+    white-space: nowrap;
+  }
+
+  .t-meta .label,
+  .t-meta.label {
+    font-weight: 632;
+  }
+
+  .t-meta .value-wide {
+    letter-spacing: calc(-0.2 * var(--u));
+  }
+
+  .t-body {
+    font-size: calc(8 * var(--u));
+    line-height: calc(11 * var(--u));
+    font-weight: 387;
+    letter-spacing: calc(-0.3 * var(--u));
+  }
+
+  .banner-bg {
+    background: var(--hero);
+    border-radius: calc(20 * var(--u));
+  }
+
+  .banner {
+    object-fit: cover;
+    border-radius: calc(20 * var(--u));
+  }
+
+  .panel {
+    background: #e9e9e9;
+    border-radius: calc(10 * var(--u));
+  }
+
+  .cover {
+    object-fit: cover;
+  }
+</style>

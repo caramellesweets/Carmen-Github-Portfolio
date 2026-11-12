@@ -7,6 +7,7 @@ import crowdConnect from '../assets/work/crowd-connect.jpg';
 import homeIceAdvantage from '../assets/work/home-ice-advantage.png';
 import shutoutSuperstars from '../assets/work/shutout-superstars.png';
 import shutoutSuperstarsTile from '../assets/work/shutout-superstars-tile.jpg';
+import legendOfLolla2Tile from '../assets/work/legend-of-lolla-2-tile.png';
 
 export const site = {
   name: 'Carmen Yuen',
@@ -55,7 +56,7 @@ export const projects: Project[] = [
   { title: 'Raptors x Bell: Crowd Connect', image: crowdConnect, position: '28.6% 50%', href: '/crowd-connect/' },
   { title: 'Toronto Maple Leafs x OLG: Home Ice Advantage', image: homeIceAdvantage, href: '/home-ice-advantage/' },
   { title: 'Toronto Maple Leafs x PointsBet: Shutout Superstars', image: shutoutSuperstarsTile, href: '/shutout-superstars/' },
-  { title: 'MLSE ARCADE x Tradable Bits', image: homeIceAdvantage },
-  { title: 'Lollapalooza: Legend of Lolla 2', image: shutoutSuperstars },
+  { title: 'Lollapalooza: Legend of Lolla 2', image: legendOfLolla2Tile, href: '/legend-of-lolla-2/' },
+  { title: 'MLSE ARCADE x Tradable Bits', image: shutoutSuperstars },
   { title: "Raptors x McDonald's: Beyond The Arch (2025)", image: shutoutSuperstars },
 ];
