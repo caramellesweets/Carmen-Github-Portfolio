@@ -1,0 +1,267 @@
+---
+import { Image } from 'astro:assets';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import BackLink from '../components/BackLink.astro';
+import TopNav from '../components/TopNav.astro';
+import { site } from '../data/site';
+import { at, vw } from '../utils/canvas';
+import portrait from '../assets/about/portrait.jpg';
+import contactArt from '../assets/about/contact.png';
+
+// "\n" marks a line break inside a paragraph, where the original has one.
+const bio = [
+  "I'm Carmen! I'm a multidisciplinary designer based in Toronto.",
+  'Growing up with games, I have a deep appreciation for the creativity and work behind them and decided to reflect that passion towards my career. I enjoy exploring new ideas, keeping up with emerging trends and looking for creative ways to transform my ideas into engaging experiences.',
+  'My goal is to continue creating meaningful experiences for those who interact with my work whether that is through gameplay, visual storytelling, or thoughtful design.',
+  'As an artist at MLSE, I strive to bring fans closer together and strengthen their connections with the teams they cheer for through gamification.\nI also hope to encourage greater engagement not only between the fans but also with the communities around them.',
+];
+
+const expertise = [
+  'Creative Strategy & Collaboration',
+  'Game Art, Development & Design',
+  'Graphic Design',
+  'Illustration',
+  'Video & Motion Content',
+];
+
+// The contact form posts to FormSubmit, which emails each message to site.contactEmail.
+// The very first message sends an activation email to that address instead; after it is confirmed, messages arrive.
+const formAction = `https://formsubmit.co/${site.contactEmail}`;
+const thanksUrl = new URL(`${import.meta.env.BASE_URL.replace(/\/$/, '')}/about/?sent=1`, Astro.site).href;
+---
+
+<BaseLayout title="About" description={bio[0]}>
+  <div class="canvas-wrap">
+    <main class="canvas" style="--canvas-height: 761">
+      <BackLink />
+
+      <TopNav current="About" />
+
+      <Image
+        class="portrait"
+        src={portrait}
+        alt="Portrait of Carmen Yuen holding a cat"
+        width={1184}
+        widths={[296, 592, 888, 1184]}
+        sizes={vw(296)}
+        loading="eager"
+        style={at(112, 143, 295.9, 310)}
+      />
+
+      <h1 class="t-name" style={at(432, 143, 511)}>Hi there!</h1>
+      <div class="bio" style={at(432, 178, 511)}>
+        {bio.map((text) => (
+          <p>
+            {text.split('\n').map((line, i) => (
+              <>
+                {i > 0 && <br />}
+                {line}
+              </>
+            ))}
+          </p>
+        ))}
+      </div>
+
+      <h2 class="t-label" style={at(432, 314, 128)}>Creative Expertise</h2>
+      <ul class="t-info" style={at(432, 335, 160)}>
+        {expertise.map((item) => <li>{item}</li>)}
+      </ul>
+
+      <h2 class="t-label" style={at(695, 314, 128)}>Experience</h2>
+      <p class="t-info" style={at(695, 335, 248)}>
+        Multidisciplinary Designer<br />
+        MLSE - Maple Leaf Sports &amp; Entertainment
+      </p>
+
+      <h2 class="t-label" style={at(432, 410, 128)}>Education</h2>
+      <p class="t-info" style={at(432, 431, 248)}>
+        OCAD University, Toronto<br />
+        Bachelor of Fine Arts - Drawing &amp; Painting: Expanded Animation
+      </p>
+
+      <h2 class="t-label" style={at(695, 410, 128)}>Email</h2>
+      <p class="t-info" style={at(695, 431, 248)}>
+        <a href={`mailto:${site.contactEmail}`}>{site.contactEmail}</a>
+      </p>
+
+      <!-- Contact section: an outlined box with artwork on the left and the form on the right -->
+      <div class="outline" aria-hidden="true" style={at(112, 470, 831, 257)}></div>
+      <Image
+        class="contact-art"
+        src={contactArt}
+        alt="Pixel-art illustration of a girl with an umbrella among bottled flowers, framed by a porthole of sky and fish"
+        width={1104}
+        widths={[276, 552, 828, 1104]}
+        sizes={vw(276)}
+        style={at(131.79, 487.65, 276.14, 219.13)}
+      />
+      <h2 class="t-label t-center" style={at(608, 484, 128)}>Get in Touch!</h2>
+      <form class="contact" action={formAction} method="POST" style={at(432, 505, 480, 201)}>
+        <input type="hidden" name="_subject" value="New message from your portfolio" />
+        <input type="hidden" name="_template" value="table" />
+        <input type="hidden" name="_next" value={thanksUrl} />
+        <!-- Left empty by people; bots that fill it in are ignored. -->
+        <input class="visually-hidden" type="text" name="_honey" tabindex="-1" autocomplete="off" aria-hidden="true" />
+
+        <input class="field" style={at(0, 0, 480, 37)} type="text" name="name" placeholder="Name" aria-label="Name" autocomplete="name" required />
+        <input class="field" style={at(0, 49, 480, 37)} type="email" name="email" placeholder="Email" aria-label="Email" autocomplete="email" required />
+        <textarea class="field" style={at(0, 98, 480, 55)} name="message" placeholder="Message" aria-label="Message" required></textarea>
+        <button class="submit" type="submit" style={at(0, 164, 480, 37)}>Submit</button>
+      </form>
+      <p class="status" role="status" aria-live="polite" style={at(432, 710, 480)}></p>
+
+      <footer class="t-copyright" style={at(294, 739, 435)}>{site.copyright}</footer>
+    </main>
+  </div>
+</BaseLayout>
+
+<script>
+  // Sends the form in the background so visitors stay on the page, and reports how it went.
+  const form = document.querySelector<HTMLFormElement>('form.contact')!;
+  const status = document.querySelector<HTMLElement>('.status')!;
+  const button = form.querySelector<HTMLButtonElement>('.submit')!;
+
+  if (new URLSearchParams(location.search).has('sent')) {
+    status.textContent = 'Thanks! Your message has been sent.';
+  }
+
+  form.addEventListener('submit', async (event) => {
+    event.preventDefault();
+    button.disabled = true;
+    button.textContent = 'Sending…';
+    status.textContent = '';
+    try {
+      const response = await fetch(form.action.replace('formsubmit.co/', 'formsubmit.co/ajax/'), {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+        body: JSON.stringify(Object.fromEntries(new FormData(form))),
+      });
+      const result = await response.json();
+      if (!response.ok || String(result.success) !== 'true') throw new Error(result.message);
+      form.reset();
+      status.textContent = 'Thanks! Your message has been sent.';
+    } catch {
+      status.textContent = 'Sorry, your message could not be sent. Please email me directly instead.';
+    } finally {
+      button.disabled = false;
+      button.textContent = 'Submit';
+    }
+  });
+</script>
+
+<style>
+  .portrait,
+  .contact-art {
+    object-fit: cover;
+    border-radius: calc(10 * var(--u));
+  }
+
+  .outline {
+    border: calc(2 * var(--u)) solid #bebebe;
+    border-radius: calc(10 * var(--u));
+  }
+
+  .bio p {
+    margin: 0 0 calc(11 * var(--u));
+    font-size: calc(8 * var(--u));
+    line-height: calc(11 * var(--u));
+    font-weight: 387;
+    letter-spacing: calc(-0.3 * var(--u));
+  }
+
+  .t-label {
+    font-size: calc(12 * var(--u));
+    line-height: calc(11 * var(--u));
+    font-weight: 717;
+    letter-spacing: calc(-0.3 * var(--u));
+    white-space: nowrap;
+  }
+
+  .t-center {
+    text-align: center;
+  }
+
+  .t-info {
+    padding: 0;
+    list-style: none;
+    font-size: calc(8 * var(--u));
+    line-height: calc(11 * var(--u));
+    font-weight: 387;
+    letter-spacing: calc(-0.1 * var(--u));
+    white-space: nowrap;
+  }
+
+  .t-info a {
+    text-decoration: none;
+  }
+
+  .t-info a:hover {
+    text-decoration: underline;
+  }
+
+  .contact > * {
+    position: absolute;
+    margin: 0;
+  }
+
+  .field,
+  .submit {
+    border: 0;
+    border-radius: calc(10 * var(--u));
+    font-family: inherit;
+    font-size: calc(12 * var(--u));
+    line-height: calc(11 * var(--u));
+    letter-spacing: calc(-0.2 * var(--u));
+    color: #000;
+  }
+
+  /* Text starts 12 from the top of each box, as in the original. */
+  .field {
+    padding: calc(12 * var(--u)) calc(12 * var(--u)) calc(14 * var(--u));
+    background: #e5e5e5;
+    font-weight: 330;
+    resize: none;
+  }
+
+  .field::placeholder {
+    color: #000;
+    opacity: 1;
+  }
+
+  textarea.field {
+    padding-top: calc(10 * var(--u));
+  }
+
+  .field:focus {
+    outline: 2px solid #1032cf;
+    outline-offset: 0;
+  }
+
+  .field:focus::placeholder {
+    opacity: 0.4;
+  }
+
+  .submit {
+    background: var(--hero);
+    font-weight: 717;
+    letter-spacing: calc(-0.3 * var(--u));
+    cursor: pointer;
+    transition: background-color 0.15s;
+  }
+
+  .submit:hover {
+    background: #c2e3ff;
+  }
+
+  .submit:disabled {
+    cursor: wait;
+  }
+
+  .status {
+    font-size: calc(8 * var(--u));
+    line-height: calc(11 * var(--u));
+    font-weight: 387;
+    letter-spacing: calc(-0.3 * var(--u));
+    text-align: center;
+  }
+</style>

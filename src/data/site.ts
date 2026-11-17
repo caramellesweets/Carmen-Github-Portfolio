@@ -13,6 +13,8 @@ export const site = {
   name: 'Carmen Yuen',
   title: 'Carmen Yuen - Artist',
   copyright: '©2027 CARMEN YUEN',
+  // Messages from the About page's contact form are sent here.
+  contactEmail: 'carmenyuen08@gmail.com',
   description: 'Carmen Yuen is a multidisciplinary designer and artist in Toronto.',
   nav: ['Home', 'Gallery', 'About'],
   links: {

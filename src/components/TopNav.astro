@@ -8,20 +8,29 @@ import instagramIcon from '../assets/work/icon-instagram.png';
 import linkedinIcon from '../assets/work/icon-linkedin.png';
 
 interface Props {
-  // On the homepage itself, "Home" is plain text rather than a link.
-  isHome?: boolean;
+  // The page this nav sits on: its own item is plain text rather than a link.
+  current?: 'Home' | 'About';
 }
 
-const { isHome = false } = Astro.props;
+const { current } = Astro.props;
+
+// Pages that exist so far; the other items are plain text.
+const hrefs: Record<string, string> = { Home: withBase('/'), About: withBase('/about/') };
+
+// Positions from the left of the nav. The About page leaves out its own item and shifts the rest right.
+const items =
+  current === 'About'
+    ? site.nav.filter((item) => item !== 'About').map((item, i) => ({ item, left: [78, 153][i] }))
+    : site.nav.map((item, i) => ({ item, left: [0, 75, 159][i] }));
 ---
 
 <nav aria-label="Main" class="nav-wrap" style={at(630, 52, 200, 18)}>
-  {site.nav.map((item, i) => {
-    const style = `left:${u([0, 75, 159][i])}`;
-    return item === 'Home' && !isHome ? (
-      <a class="t-nav" href={withBase('/')} style={style}>{item}</a>
+  {items.map(({ item, left }) => {
+    const style = `left:${u(left)}`;
+    return hrefs[item] && item !== current ? (
+      <a class="t-nav" href={hrefs[item]} style={style}>{item}</a>
     ) : (
-      <span class="t-nav" style={style} aria-current={item === 'Home' ? 'page' : undefined}>{item}</span>
+      <span class="t-nav" style={style} aria-current={item === current ? 'page' : undefined}>{item}</span>
     );
   })}
 </nav>
