@@ -3,7 +3,7 @@ import { Image } from 'astro:assets';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import BackLink from '../components/BackLink.astro';
 import TopNav from '../components/TopNav.astro';
-import { site } from '../data/site';
+import { site, expertise } from '../data/site';
 import { at, vw } from '../utils/canvas';
 import portrait from '../assets/about/portrait.jpg';
 import contactArt from '../assets/about/contact.png';
@@ -14,14 +14,6 @@ const bio = [
   'Growing up with games, I have a deep appreciation for the creativity and work behind them and decided to reflect that passion towards my career. I enjoy exploring new ideas, keeping up with emerging trends and looking for creative ways to transform my ideas into engaging experiences.',
   'My goal is to continue creating meaningful experiences for those who interact with my work whether that is through gameplay, visual storytelling, or thoughtful design.',
   'As an artist at MLSE, I strive to bring fans closer together and strengthen their connections with the teams they cheer for through gamification.\nI also hope to encourage greater engagement not only between the fans but also with the communities around them.',
-];
-
-const expertise = [
-  'Creative Strategy & Collaboration',
-  'Game Art, Development & Design',
-  'Graphic Design',
-  'Illustration',
-  'Video & Motion Content',
 ];
 
 // The contact form posts to FormSubmit, which emails each message to site.contactEmail.

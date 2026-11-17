@@ -17,11 +17,14 @@ const { current } = Astro.props;
 // Pages that exist so far; the other items are plain text.
 const hrefs: Record<string, string> = { Home: withBase('/'), About: withBase('/about/') };
 
-// Positions from the left of the nav. The About page leaves out its own item and shifts the rest right.
+// Positions from the left of the nav. The homepage and About page leave out their own item;
+// on About the remaining two shift right.
 const items =
   current === 'About'
     ? site.nav.filter((item) => item !== 'About').map((item, i) => ({ item, left: [78, 153][i] }))
-    : site.nav.map((item, i) => ({ item, left: [0, 75, 159][i] }));
+    : site.nav
+        .map((item, i) => ({ item, left: [0, 75, 159][i] }))
+        .filter(({ item }) => item !== current);
 ---
 
 <nav aria-label="Main" class="nav-wrap" style={at(630, 52, 200, 18)}>

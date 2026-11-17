@@ -23,16 +23,7 @@ export const site = {
   },
 };
 
-export const education = {
-  school: 'OCAD University, Toronto',
-  detail: 'Bachelor of Fine Arts - Drawing & Painting: Expanded Animation',
-};
-
-export const experience = {
-  role: 'Multidisciplinary Designer',
-  detail: 'MLSE - Maple Leaf Sports & Entertainment',
-};
-
+// Listed under Creative Expertise on the About page.
 export const expertise = [
   'Creative Strategy & Collaboration',
   'Game Art, Development & Design',

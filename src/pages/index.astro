@@ -2,11 +2,11 @@
 import { Image } from 'astro:assets';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import TopNav from '../components/TopNav.astro';
-import { site, education, experience, expertise, projects } from '../data/site';
+import { site, projects } from '../data/site';
 import { u, at, vw } from '../utils/canvas';
 import { withBase } from '../utils/url';
 
-const GRID = { x: 67, y: 616, colStep: 304, rowStep: 202, w: 282, h: 169 };
+const GRID = { x: 67, y: 421, colStep: 304, rowStep: 202, w: 282, h: 169 };
 const tiles = projects.map((project, i) => ({
   ...project,
   x: GRID.x + (i % 3) * GRID.colStep,
@@ -16,7 +16,7 @@ const tiles = projects.map((project, i) => ({
 
 <BaseLayout>
   <div class="canvas-wrap">
-    <main class="canvas">
+    <main class="canvas" style="--canvas-height: 1066">
       <!-- Header -->
       <h1 class="t-name" style={at(67, 49, 511)}>{site.name}</h1>
 
@@ -26,23 +26,8 @@ const tiles = projects.map((project, i) => ({
       <div class="hero" aria-hidden="true" style={at(67, 98, 890, 261)}></div>
       <div class="hero" aria-hidden="true" style={at(488, 240, 469, 120)}></div>
 
-      <!-- Education / Experience -->
-      <h2 class="t-heading" style={at(67, 378, 480)}>Education</h2>
-      <p class="t-strong" style={at(67, 405, 435)}>{education.school}</p>
-      <p class="t-small" style={at(67, 423, 435)}>{education.detail}</p>
-
-      <h2 class="t-heading" style={at(544, 378, 480)}>Experience</h2>
-      <p class="t-strong" style={at(544, 405, 480)}>{experience.role}</p>
-      <p class="t-small" style={at(544, 423, 435)}>{experience.detail}</p>
-
-      <!-- Creative Expertise -->
-      <h2 class="t-heading" style={at(67, 459, 480)}>Creative Expertise</h2>
-      <ul class="t-list" style={at(67, 489, 435)}>
-        {expertise.map((item) => <li>{item}</li>)}
-      </ul>
-
       <!-- Featured Work -->
-      <h2 class="t-heading" style={at(67, 571, 480)}>Featured Work</h2>
+      <h2 class="t-heading" style={at(67, 376, 480)}>Featured Work</h2>
       {tiles.map((tile) => {
         const Tag = tile.href ? 'a' : 'figure';
         return (
@@ -59,6 +44,8 @@ const tiles = projects.map((project, i) => ({
           </Tag>
         );
       })}
+
+      <footer class="t-copyright" style={at(294, 1043, 435)}>{site.copyright}</footer>
     </main>
   </div>
 </BaseLayout>
