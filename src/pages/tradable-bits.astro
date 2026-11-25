@@ -1,0 +1,169 @@
+---
+import { Image } from 'astro:assets';
+import type { ImageMetadata } from 'astro';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import BackLink from '../components/BackLink.astro';
+import TopNav from '../components/TopNav.astro';
+import { site } from '../data/site';
+import { at, vw } from '../utils/canvas';
+import banner from '../assets/tradable-bits/banner.png';
+
+// Gameplay screens for each game, four per game: tradable-bits/<game>-1.png to -4.png.
+const screenFiles = import.meta.glob<{ default: ImageMetadata }>('../assets/tradable-bits/*-[1-4].png', { eager: true });
+const screensFor = (slug: string) =>
+  [1, 2, 3, 4].map((n) => screenFiles[`../assets/tradable-bits/${slug}-${n}.png`].default);
+
+const title = 'MLSE ARCADE x Tradable Bits';
+const clients = 'MLSE ARCADE x Tradable Bits';
+
+const overview = [
+  {
+    y: 397,
+    w: 445,
+    text: "MLSE Arcade collaborated with Tradable Bits to create a collection of customizable games developed for brand partners that offered adaptable gameplay experiences that could be reskinned to reflect each partner's visual identity.",
+  },
+  {
+    y: 429,
+    w: 435,
+    text: 'My contributions spanned across multiple projects, designing to have partners easily collaborate and incorporate their own branding and campaign elements through reskinning.',
+  },
+];
+
+// The Team line breaks onto a second line where the original does ("\n").
+const details = [
+  { label: 'Role', value: 'Artist & Designer - Concept, Visual & Asset Production', y: 397 },
+  { label: 'Tools', value: 'Figma, Illustrator, Clip Studio Paint', y: 413 },
+  { label: 'Team', value: 'Derrick Matthews, Danny Tran, Daniel Houseley, Nic Bradford,\nChidozie Ikpe, Becky Wu', y: 429, w: 298 },
+  { label: 'Year', value: '2025', y: 459.13 },
+];
+
+// One section per game: a centred name, a black square for its video, then four screens,
+// with a grey line above every section after the first.
+const SCREEN = { w: 122, h: 221, xs: [339, 506, 673, 835] };
+const games = [
+  { name: 'Target Takedown', slug: 'target-takedown', labelY: 479, y: 508 },
+  { name: 'Tipoff', slug: 'tipoff', labelY: 777, y: 806, dividerY: 751 },
+  { name: 'Word Jumble', slug: 'word-jumble', labelY: 1067, y: 1096, dividerY: 1041 },
+  { name: 'Breakpoint', slug: 'breakpoint', labelY: 1369, y: 1398, dividerY: 1343 },
+];
+---
+
+<BaseLayout title={title} description={overview[0].text}>
+  <div class="canvas-wrap">
+    <main class="canvas" style="--canvas-height: 1661">
+      <BackLink />
+
+      <TopNav />
+
+      <h1 class="t-name" style={at(67, 66, 511)}>{title}</h1>
+      <p class="t-meta" style={at(67, 102, 435)}>
+        <strong class="label">Clients:</strong> <span class="value-wide">{clients}</span>
+      </p>
+
+      <!-- Banner -->
+      <div class="banner-bg" aria-hidden="true" style={at(67, 143, 890, 204)}></div>
+      <Image
+        class="banner"
+        src={banner}
+        alt="MLSE ARCADE x Tradable Bits key art, phones showing Word Jumble, Target Takedown and Tipoff"
+        width={1780}
+        widths={[890, 1780, 2670]}
+        sizes={vw(890)}
+        loading="eager"
+        style={at(67, 143, 890, 204)}
+      />
+
+      <!-- Overview -->
+      <h2 class="t-heading" style={at(67, 370, 480)}>Overview:</h2>
+      {overview.map((item) => (
+        <p class="t-body" style={at(67, item.y, item.w)}>{item.text}</p>
+      ))}
+
+      {details.map((item) => (
+        <p class="t-meta" style={at(659, item.y, item.w ?? 435)}>
+          <strong class="label">{item.label}:</strong>{' '}
+          {item.value.split('\n').map((line, i) => (
+            <>
+              {i > 0 && <br />}
+              {line}
+            </>
+          ))}
+        </p>
+      ))}
+
+      <!-- Games -->
+      {games.map((game) => (
+        <>
+          {game.dividerY && <div class="divider" aria-hidden="true" style={at(67, game.dividerY, 890, 3)}></div>}
+          <h2 class="t-meta label t-center" style={at(294.5, game.labelY, 435)}>{game.name}</h2>
+          <div class="video-slot" aria-hidden="true" style={at(67, game.y, 235, 221)}></div>
+          {screensFor(game.slug).map((screen, i) => (
+            <Image
+              class="screen"
+              src={screen}
+              alt={`${game.name} gameplay screen ${i + 1}`}
+              width={488}
+              widths={[122, 244, 366, 488]}
+              sizes={vw(SCREEN.w)}
+              style={at(SCREEN.xs[i], game.y, SCREEN.w, SCREEN.h)}
+            />
+          ))}
+        </>
+      ))}
+
+      <footer class="t-copyright" style={at(294, 1642, 435)}>{site.copyright}</footer>
+    </main>
+  </div>
+</BaseLayout>
+
+<style>
+  .t-meta {
+    font-size: calc(8 * var(--u));
+    line-height: calc(16 * var(--u));
+    font-weight: 387;
+    letter-spacing: calc(-0.1 * var(--u));
+    white-space: nowrap;
+  }
+
+  .t-meta .label,
+  .t-meta.label {
+    font-weight: 632;
+  }
+
+  .t-meta .value-wide {
+    letter-spacing: calc(-0.2 * var(--u));
+  }
+
+  .t-center {
+    text-align: center;
+  }
+
+  .t-body {
+    font-size: calc(8 * var(--u));
+    line-height: calc(11 * var(--u));
+    font-weight: 387;
+    letter-spacing: calc(-0.3 * var(--u));
+  }
+
+  .banner-bg {
+    background: var(--hero);
+    border-radius: calc(20 * var(--u));
+  }
+
+  .banner {
+    object-fit: cover;
+    border-radius: calc(20 * var(--u));
+  }
+
+  .divider {
+    background: #e2e2e2;
+  }
+
+  .video-slot {
+    background: #000;
+  }
+
+  .screen {
+    object-fit: cover;
+  }
+</style>

@@ -6,6 +6,7 @@ import tapdownTycoon from '../assets/work/tapdown-tycoon.png';
 import crowdConnect from '../assets/work/crowd-connect.jpg';
 import homeIceAdvantage from '../assets/work/home-ice-advantage.png';
 import shutoutSuperstars from '../assets/work/shutout-superstars.png';
+import tradableBitsTile from '../assets/work/tradable-bits-tile.jpg';
 import shutoutSuperstarsTile from '../assets/work/shutout-superstars-tile.jpg';
 import legendOfLolla2Tile from '../assets/work/legend-of-lolla-2-tile.png';
 
@@ -50,6 +51,6 @@ export const projects: Project[] = [
   { title: 'Toronto Maple Leafs x OLG: Home Ice Advantage', image: homeIceAdvantage, href: '/home-ice-advantage/' },
   { title: 'Toronto Maple Leafs x PointsBet: Shutout Superstars', image: shutoutSuperstarsTile, href: '/shutout-superstars/' },
   { title: 'Lollapalooza: Legend of Lolla 2', image: legendOfLolla2Tile, href: '/legend-of-lolla-2/' },
-  { title: 'MLSE ARCADE x Tradable Bits', image: shutoutSuperstars },
-  { title: "Raptors x McDonald's: Beyond The Arch (2025)", image: shutoutSuperstars },
+  { title: 'MLSE ARCADE x Tradable Bits', image: tradableBitsTile, href: '/tradable-bits/' },
+  { title: 'MLSE ARCADE: FanAccess', image: shutoutSuperstars },
 ];
